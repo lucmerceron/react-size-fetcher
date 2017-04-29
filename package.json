@@ -1,0 +1,43 @@
+{
+  "name": "react-size-fetcher",
+  "version": "1.0.0",
+  "description": "Transparently retrieve a component size",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel --out-dir dist --ignore *.test.js src",
+    "prebuild": "rimraf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucmerceron/react-size-fetcher.git"
+  },
+  "keywords": [
+    "react",
+    "size-fetcher",
+    "hoc",
+    "size"
+  ],
+  "author": "Luc Merceron <luc.merceron.developer@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lucmerceron/react-size-fetcher/issues"
+  },
+  "homepage": "https://github.com/lucmerceron/react-size-fetcher#readme",
+  "dependencies": {
+    "prop-types": "15.5.8",
+    "react": "15.5.4"
+  },
+  "devDependencies": {
+    "babel-cli": "6.24.1",
+    "babel-eslint": "7.2.3",
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-react": "6.24.1",
+    "babel-preset-stage-3": "6.24.1",
+    "eslint-config-airbnb": "14.1.0",
+    "rimraf": "2.6.1"
+  },
+  "babel": {
+    "presets": ["es2015", "react", "stage-3"]
+  }
+}
