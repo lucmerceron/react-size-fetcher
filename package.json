@@ -11,7 +11,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "build": "babel --out-dir dist --ignore *.test.js src",
-    "prebuild": "rimraf dist coverage",
+    "prebuild": "rimraf dist",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "jest": {
