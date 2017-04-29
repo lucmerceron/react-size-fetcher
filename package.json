@@ -6,7 +6,7 @@
   "scripts": {
     "commit": "git-cz",
     "check-coverage": "istanbul check-coverage --statements 90 --branches 85 --functions 100 --lines 100",
-    "report-coverage": "jest && codecov",
+    "report-coverage": "cat ./coverage/lcov.info | codecov",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -58,6 +58,7 @@
     "eslint-config-airbnb": "14.1.0",
     "istanbul": "0.4.5",
     "jest": "19.0.2",
+    "jest-babel-istanbul": "0.1.0",
     "react-addons-test-utils": "15.5.1",
     "react-dom": "15.5.4",
     "rimraf": "2.6.1",
