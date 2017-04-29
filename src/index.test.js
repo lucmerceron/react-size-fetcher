@@ -16,7 +16,7 @@ describe('SizeFetcher component', () => {
   const sizeChangeFirst = jest.fn(() => firstCallbackLength++)
   const sizeChangeSecond = jest.fn(() => secondCallbackLength++)
 
-  const Component = <div>ReactComponent</div>
+  const Component = <div ref={() => console.log('OYO')}>ReactComponent</div>
 
   const FunctionalReactComponent = () => Component
   class NormalReactComponent extends React.Component {
@@ -51,6 +51,13 @@ describe('SizeFetcher component', () => {
     expect(secondCallbackLength).toEqual(1)
   })
   it('should call sizeChange function when the window size changes if size changed or no comparison actived', () => {
+    window.resizeTo(1000, 1000)
+    expect(firstCallbackLength).toEqual(3)
+    expect(secondCallbackLength).toEqual(1)
+  })
+  it('should not call sizeChange if the component is unmounted', () => {
+    WrapperEnhancedFunctionalComponent.unmount()
+    WrapperEnhancedNormalComponent.unmount()
     window.resizeTo(1000, 1000)
     expect(firstCallbackLength).toEqual(3)
     expect(secondCallbackLength).toEqual(1)

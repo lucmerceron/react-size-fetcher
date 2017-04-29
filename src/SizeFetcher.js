@@ -79,12 +79,7 @@ const SizeFetcher = (SubComponent, options = { noComparison: false }) => {
       let newProps = {}
       if (elementsTree) {
         // Here thanks to II, we can add a ref without the subComponent noticing
-        newProps = { ref: comp => {
-          // Register the component to retrieve the DOM element
-          this.comp = comp
-          // Call the element ref when there is one
-          if (elementsTree.props.ref) elementsTree.props.ref()
-        } }
+        newProps = { ref: comp => (this.comp = comp) }
       }
 
       // Create a new component from SubComponent render with new props
