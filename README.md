@@ -1,7 +1,7 @@
 # React-Size-Fetcher
 
 ReactSizeFetcher is a simple-to-use React library to transparently and dynamically retrieve the DOM sizes of a component.
-Gives { clientHeight, clientWidth, scrollHeight, scrollWidth } informations about the component.
+Returns { clientHeight, clientWidth, scrollHeight, scrollWidth } informations about the component.
 
 It is a tiny (4kB) library.
 
