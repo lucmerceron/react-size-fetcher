@@ -51,7 +51,6 @@ const SizeFetcher = (SubComponent, options = { noComparison: false }) => {
       this.privateRegisterComponentInfos()
     }
     privateHandleSizeMayHaveChanged() {
-      if (!this.comp) return
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
 
       if (options.noComparison ||
@@ -61,7 +60,6 @@ const SizeFetcher = (SubComponent, options = { noComparison: false }) => {
       }
     }
     privateRegisterComponentInfos() {
-      if (!this.comp) return
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
 
       // Register the height & width so we can compare them in the future

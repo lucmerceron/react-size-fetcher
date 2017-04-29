@@ -10,6 +10,8 @@ before_script:
   - npm prune
 script:
   - npm run test
+  - npm run test:cov
+  - npm run check-coverage
   - npm run build
 after_success:
   - npm run semantic-release
