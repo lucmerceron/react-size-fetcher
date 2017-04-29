@@ -57,6 +57,14 @@ describe('SizeFetcher component', () => {
     expect(sizeChangeFirst.mock.calls.length).toEqual(1)
     expect(sizeChangeSecond.mock.calls.length).toEqual(1)
   })
+  it('should call sizeChange with a correctly strutured object', () => {
+    expect(sizeChangeFirst.mock.calls).toEqual([[
+      { clientHeight: 0, clientWidth: 0, scrollHeight: 0, scrollWidth: 0 }
+    ]])
+    expect(sizeChangeFirst.mock.calls).toEqual([[
+      { clientHeight: 0, clientWidth: 0, scrollHeight: 0, scrollWidth: 0 }
+    ]])
+  }) 
   it('should call sizeChange function when new props received if size changed or no comparison actived', () => {
     WrapperEnhancedFunctionalComponent.setProps({ newProps: true })
     WrapperEnhancedNormalComponent.setProps({ newProps: true })

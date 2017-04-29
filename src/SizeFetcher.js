@@ -28,7 +28,7 @@ const SizeFetcher = (SubComponent, options = { noComparison: false }) => {
       if (super.componentDidMount) super.componentDidMount()
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
 
-      this.privateSizeChanged({ clientHeight, clientWidth, scrollHeight, scrollWidth })
+      this.privateSizeChanged(clientHeight, clientWidth, scrollHeight, scrollWidth)
       // Register an event listener on the resize so we are concious of possible size change
       window.addEventListener('resize', this.privateHandleSizeMayHaveChanged.bind(this))
     }
@@ -45,8 +45,9 @@ const SizeFetcher = (SubComponent, options = { noComparison: false }) => {
 
     privateSizeChanged(clientHeight, clientWidth, scrollHeight, scrollWidth) {
       const { sizeChange } = this.props
+
       // First call of the callback, the component mounted and we need to give its size
-      sizeChange({ clientHeight, clientWidth, scrollHeight, scrollWidth })
+      sizeChange({ clientHeight: clientHeight, clientWidth: clientWidth, scrollHeight: scrollHeight, scrollWidth: scrollWidth })
       // Register the dimension for future sake (comparison)
       this.privateRegisterComponentInfos()
     }
