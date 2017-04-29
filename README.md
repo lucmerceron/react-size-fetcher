@@ -52,6 +52,7 @@ const EnhancedComponent = SizeFetcher(ComponentToObserve, { noComparison: true})
 
 ## Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
+
 You can find every release documentation documented on the [Releases](https://github.com/lucmerceron/react-size-fetcher/releases) page.
 
 ## License
