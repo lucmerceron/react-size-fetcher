@@ -22,9 +22,12 @@
   },
   "keywords": [
     "react",
-    "size-fetcher",
-    "hoc",
-    "size"
+    "size",
+    "fetcher"
+  ],
+  "files": [
+    "dist",
+    "README.md"
   ],
   "author": "Luc Merceron <luc.merceron.developer@gmail.com>",
   "license": "MIT",
