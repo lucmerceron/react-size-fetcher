@@ -9,7 +9,7 @@ const isStateless = component => !component.render && !(component.prototype && c
 * This component is usefull when you need a transparant way for knowing the size of a sub component
 * It will call the sizeChange function when the size of the sub component is first known and then everytime it changes
 */
-const SizeFetcher = (sizeChange, options = { noComparison: false }) => SubComponent => {
+const SizeFetcher = (SubComponent, options = { noComparison: false }) => {
   const component = SubComponent
   let ComposedComponent = component
 
@@ -26,16 +26,9 @@ const SizeFetcher = (sizeChange, options = { noComparison: false }) => SubCompon
   class Enhancer extends ComposedComponent {
     componentDidMount() {
       if (super.componentDidMount) super.componentDidMount()
-
-      const { id } = this.props
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
 
-      // First call of the callback, the component mounted and we need to give its size
-      sizeChange(id, { clientHeight, clientWidth, scrollHeight, scrollWidth })
-
-      // Register the dimension for future sake (comparison)
-      this.privateRegisterComponentInfos()
-
+      this.privateSizeChanged({ clientHeight, clientWidth, scrollHeight, scrollWidth })
       // Register an event listener on the resize so we are concious of possible size change
       window.addEventListener('resize', this.privateHandleSizeMayHaveChanged.bind(this))
     }
@@ -50,22 +43,21 @@ const SizeFetcher = (sizeChange, options = { noComparison: false }) => SubCompon
       window.removeEventListener('resize', this.privateHandleSizeMayHaveChanged.bind(this))
     }
 
+    privateSizeChanged(clientHeight, clientWidth, scrollHeight, scrollWidth) {
+      const { sizeChange } = this.props
+      // First call of the callback, the component mounted and we need to give its size
+      sizeChange({ clientHeight, clientWidth, scrollHeight, scrollWidth })
+      // Register the dimension for future sake (comparison)
+      this.privateRegisterComponentInfos()
+    }
     privateHandleSizeMayHaveChanged() {
-      const { id } = this.props
       if (!this.comp) return
-
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
 
-      if (options.noComparison) {
-        sizeChange(id, { clientHeight, clientWidth, scrollHeight, scrollWidth })
-        this.privateRegisterComponentInfos()
-      }
-
-      // Detect if the size changed (avoid unnecessary calls)
-      if (clientWidth !== this.clientWidth || clientHeight !== this.clientHeight ||
-        scrollHeight !== this.scrollHeight || scrollWidth !== this.scrollWidth) {
-        sizeChange(id, { clientHeight, clientWidth, scrollHeight, scrollWidth })
-        this.privateRegisterComponentInfos()
+      if (options.noComparison ||
+        (clientWidth !== this.clientWidth || clientHeight !== this.clientHeight ||
+        scrollHeight !== this.scrollHeight || scrollWidth !== this.scrollWidth)) {
+        this.privateSizeChanged(clientHeight, clientWidth, scrollHeight, scrollWidth)
       }
     }
     privateRegisterComponentInfos() {
@@ -102,7 +94,7 @@ const SizeFetcher = (sizeChange, options = { noComparison: false }) => SubCompon
   }
   Enhancer.displayName = `SizeFetcher(${getDisplayName(SubComponent)})`
   Enhancer.propTypes = {
-    id: PropTypes.any.isRequired,
+    sizeChange: PropTypes.any.isRequired,
   }
 
   return Enhancer

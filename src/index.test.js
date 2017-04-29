@@ -5,16 +5,16 @@ import SizeFetcher from './index'
 
 describe('SizeFetcher component', () => {
   // Simulating a window resize function
-  beforeAll(() => {
-    global.window.resizeTo = (width, height) => {
-      global.window.innerWidth = width || global.window.innerWidth
-      global.window.innerHeight = width || global.window.innerHeight
-      global.window.dispatchEvent(new Event('resize'))
-    }
-  })
+  global.window.resizeTo = (width, height) => {
+    global.window.innerWidth = width || global.window.innerWidth
+    global.window.innerHeight = width || global.window.innerHeight
+    global.window.dispatchEvent(new Event('resize'))
+  }
 
-  const sizeChangeFirst = jest.fn()
-  const sizeChangeSecond = jest.fn()
+  let firstCallbackLength = 0
+  let secondCallbackLength = 0
+  const sizeChangeFirst = jest.fn(() => firstCallbackLength++)
+  const sizeChangeSecond = jest.fn(() => secondCallbackLength++)
 
   const Component = <div>ReactComponent</div>
 
@@ -25,11 +25,11 @@ describe('SizeFetcher component', () => {
     }
   }
 
-  const EnhancedFunctionalComponent = SizeFetcher(sizeChangeFirst, { noComparison: true })(FunctionalReactComponent)
-  const EnhancedNormalComponent = SizeFetcher(sizeChangeSecond)(NormalReactComponent)
+  const EnhancedFunctionalComponent = SizeFetcher(FunctionalReactComponent, { noComparison: true })
+  const EnhancedNormalComponent = SizeFetcher(NormalReactComponent)
 
-  const WrapperEnhancedNormalComponent = mount(<EnhancedNormalComponent />)
-  const WrapperEnhancedFunctionalComponent = mount(<EnhancedFunctionalComponent />)
+  const WrapperEnhancedFunctionalComponent = mount(<EnhancedFunctionalComponent sizeChange={sizeChangeFirst}/>)
+  const WrapperEnhancedNormalComponent = mount(<EnhancedNormalComponent sizeChange={sizeChangeSecond}/>)
 
   it('should render with normal or functional sub-components', () => {
     expect(WrapperEnhancedFunctionalComponent.contains(Component)).toBeTruthy()
@@ -47,12 +47,12 @@ describe('SizeFetcher component', () => {
   it('should call sizeChange function when new props received if size changed or no comparison actived', () => {
     WrapperEnhancedFunctionalComponent.setProps({ newProps: true })
     WrapperEnhancedNormalComponent.setProps({ newProps: true })
-    expect(sizeChangeFirst.mock.calls.length).toEqual(2)
-    expect(sizeChangeSecond.mock.calls.length).toEqual(1)
+    expect(sizeChangeFirst.mock.calls.length).toEqual(firstCallbackLength)
+    expect(sizeChangeSecond.mock.calls.length).toEqual(secondCallbackLength)
   })
   it('should call sizeChange function when the window size changes if size changed or no comparison actived', () => {
     window.resizeTo(1000, 1000)
-    expect(sizeChangeFirst.mock.calls.length).toEqual(3)
-    expect(sizeChangeSecond.mock.calls.length).toEqual(1)
+    expect(sizeChangeFirst.mock.calls.length).toEqual(firstCallbackLength)
+    expect(sizeChangeSecond.mock.calls.length).toEqual(secondCallbackLength)
   })
 })
