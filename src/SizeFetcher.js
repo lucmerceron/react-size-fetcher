@@ -9,7 +9,7 @@ const isStateless = component => !component.render && !(component.prototype && c
 * This component is usefull when you need a transparant way for knowing the size of a sub component
 * It will call the sizeChange function when the size of the sub component is first known and then everytime it changes
 */
-const SizeFetcher = sizeChange => SubComponent => {
+const SizeFetcher = (sizeChange, options = { noComparison: false }) => SubComponent => {
   const component = SubComponent
   let ComposedComponent = component
 
@@ -55,6 +55,11 @@ const SizeFetcher = sizeChange => SubComponent => {
       if (!this.comp) return
 
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
+
+      if (options.noComparison) {
+        sizeChange(id, { clientHeight, clientWidth, scrollHeight, scrollWidth })
+        this.privateRegisterComponentInfos()
+      }
 
       // Detect if the size changed (avoid unnecessary calls)
       if (clientWidth !== this.clientWidth || clientHeight !== this.clientHeight ||
