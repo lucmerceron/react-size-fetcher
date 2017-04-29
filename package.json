@@ -7,14 +7,16 @@
     "commit": "git-cz",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
     "build": "babel --out-dir dist --ignore *.test.js src",
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist coverage",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "jest": {
     "transform": {
       ".*": "<rootDir>/node_modules/babel-jest"
-    }
+    },
+    "coverageCollector": "jest-babel-istanbul"
   },
   "repository": {
     "type": "git",
@@ -51,6 +53,7 @@
     "enzyme": "2.8.2",
     "eslint-config-airbnb": "14.1.0",
     "jest": "19.0.2",
+    "jest-babel-istanbul": "0.1.0",
     "react-addons-test-utils": "15.5.1",
     "react-dom": "15.5.4",
     "rimraf": "2.6.1",
