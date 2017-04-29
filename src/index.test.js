@@ -47,12 +47,12 @@ describe('SizeFetcher component', () => {
   it('should call sizeChange function when new props received if size changed or no comparison actived', () => {
     WrapperEnhancedFunctionalComponent.setProps({ newProps: true })
     WrapperEnhancedNormalComponent.setProps({ newProps: true })
-    expect(sizeChangeFirst.mock.calls.length).toEqual(firstCallbackLength)
-    expect(sizeChangeSecond.mock.calls.length).toEqual(secondCallbackLength)
+    expect(firstCallbackLength).toEqual(2)
+    expect(secondCallbackLength).toEqual(1)
   })
   it('should call sizeChange function when the window size changes if size changed or no comparison actived', () => {
     window.resizeTo(1000, 1000)
-    expect(sizeChangeFirst.mock.calls.length).toEqual(firstCallbackLength)
-    expect(sizeChangeSecond.mock.calls.length).toEqual(secondCallbackLength)
+    expect(firstCallbackLength).toEqual(3)
+    expect(secondCallbackLength).toEqual(1)
   })
 })
