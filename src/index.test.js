@@ -25,7 +25,6 @@ describe('SizeFetcher component', () => {
   const initialProps = { test: 'ok' }
   class InnnerComponent extends React.Component {
     componentDidMount() {
-      console.log('OYOYO')
       this.forceUpdate()
     }
     render() {
@@ -53,7 +52,7 @@ describe('SizeFetcher component', () => {
   }
   const InnerReactComponent = () => (<div>
     InnerComponent :
-    {InnnerComponent}
+    <InnnerComponent />
   </div>)
 
   const EnhancedFunctionalComponent = SizeFetcher(FunctionalReactComponent, { noComparison: true })
@@ -108,6 +107,7 @@ describe('SizeFetcher component', () => {
   })
   it('should call sizeChange function when an innerComponent update itseft', () => {
     const WrapperEnhancedInnerComponent = mount(<EnhancedInnerComponent sizeChange={sizeChangeThird}/>)
+    console.log(WrapperEnhancedInnerComponent.html())
     // First call at mount then when sub component force its update
     expect(sizeChangeThird.mock.calls.length).toEqual(2)
   })
