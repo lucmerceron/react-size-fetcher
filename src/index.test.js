@@ -17,11 +17,21 @@ describe('SizeFetcher component', () => {
   let secondCallbackLength = 0
   const sizeChangeFirst = jest.fn(() => firstCallbackLength++)
   const sizeChangeSecond = jest.fn(() => secondCallbackLength++)
+  const sizeChangeThird = jest.fn()
   const superLifeCycle = jest.fn()
   const justAString = "Not a react component"
 
   const Component = <div>ReactComponent</div>
   const initialProps = { test: 'ok' }
+  class InnnerComponent extends React.Component {
+    componentDidMount() {
+      console.log('OYOYO')
+      this.forceUpdate()
+    }
+    render() {
+      return <div>InnerComponent</div>
+    }
+  }
 
   const FunctionalReactComponent = () => Component
   class NormalReactComponent extends React.Component {
@@ -41,10 +51,15 @@ describe('SizeFetcher component', () => {
       return Component
     }
   }
+  const InnerReactComponent = () => (<div>
+    InnerComponent :
+    {InnnerComponent}
+  </div>)
 
   const EnhancedFunctionalComponent = SizeFetcher(FunctionalReactComponent, { noComparison: true })
   const EnhancedNormalComponent = SizeFetcher(NormalReactComponent)
   const NotAnEnhancedComponent = SizeFetcher(justAString)
+  const EnhancedInnerComponent = SizeFetcher(InnerReactComponent, { noComparison: true })
 
   const WrapperEnhancedFunctionalComponent = mount(<EnhancedFunctionalComponent initialProps={initialProps} sizeChange={sizeChangeFirst}/>)
   const WrapperEnhancedNormalComponent = mount(<EnhancedNormalComponent sizeChange={sizeChangeSecond}/>)
@@ -90,6 +105,11 @@ describe('SizeFetcher component', () => {
     window.resizeTo(1000, 1000)
     expect(firstCallbackLength).toEqual(3)
     expect(secondCallbackLength).toEqual(1)
+  })
+  it('should call sizeChange function when an innerComponent update itseft', () => {
+    const WrapperEnhancedInnerComponent = mount(<EnhancedInnerComponent sizeChange={sizeChangeThird}/>)
+    // First call at mount then when sub component force its update
+    expect(sizeChangeThird.mock.calls.length).toEqual(2)
   })
   it('should have called super life cycle hooks', () => {
     expect(superLifeCycle.mock.calls.length).toEqual(4)
