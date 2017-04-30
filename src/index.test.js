@@ -10,14 +10,18 @@ describe('SizeFetcher component', () => {
     global.window.innerHeight = width || global.window.innerHeight
     global.window.dispatchEvent(new Event('resize'))
   }
+  // Mocking console error function
+  global.console.error = jest.fn()
 
   let firstCallbackLength = 0
   let secondCallbackLength = 0
   const sizeChangeFirst = jest.fn(() => firstCallbackLength++)
   const sizeChangeSecond = jest.fn(() => secondCallbackLength++)
   const superLifeCycle = jest.fn()
+  const justAString = "Not a react component"
 
   const Component = <div>ReactComponent</div>
+  const initialProps = { test: 'ok' }
 
   const FunctionalReactComponent = () => Component
   class NormalReactComponent extends React.Component {
@@ -40,8 +44,9 @@ describe('SizeFetcher component', () => {
 
   const EnhancedFunctionalComponent = SizeFetcher(FunctionalReactComponent, { noComparison: true })
   const EnhancedNormalComponent = SizeFetcher(NormalReactComponent)
+  const NotAnEnhancedComponent = SizeFetcher(justAString)
 
-  const WrapperEnhancedFunctionalComponent = mount(<EnhancedFunctionalComponent sizeChange={sizeChangeFirst}/>)
+  const WrapperEnhancedFunctionalComponent = mount(<EnhancedFunctionalComponent initialProps={initialProps} sizeChange={sizeChangeFirst}/>)
   const WrapperEnhancedNormalComponent = mount(<EnhancedNormalComponent sizeChange={sizeChangeSecond}/>)
 
   it('should render with normal or functional sub-components', () => {
@@ -64,7 +69,10 @@ describe('SizeFetcher component', () => {
     expect(sizeChangeFirst.mock.calls).toEqual([[
       { clientHeight: 0, clientWidth: 0, scrollHeight: 0, scrollWidth: 0 }
     ]])
-  }) 
+  })
+  it('should transmit the initialProps to the initial component', () => {
+    expect(WrapperEnhancedFunctionalComponent.props().initialProps).toEqual(initialProps)
+  })
   it('should call sizeChange function when new props received if size changed or no comparison actived', () => {
     WrapperEnhancedFunctionalComponent.setProps({ newProps: true })
     WrapperEnhancedNormalComponent.setProps({ newProps: true })
@@ -85,5 +93,11 @@ describe('SizeFetcher component', () => {
   })
   it('should have called super life cycle hooks', () => {
     expect(superLifeCycle.mock.calls.length).toEqual(4)
+  })
+  it('should not implement SizeFetcher on a non-react component', () => {
+    const WrapperNotAnEnhancedComponent = mount(<NotAnEnhancedComponent sizeChange={sizeChangeSecond}/>)
+    expect(WrapperNotAnEnhancedComponent.name()).toEqual('')
+    expect(WrapperNotAnEnhancedComponent.html()).toEqual(null)
+    expect(console.error).toBeCalled()
   })
 })

@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const getDisplayName = wrappedComponent => wrappedComponent.displayName || wrappedComponent.name || 'Component'
+import warning from './utils/warning'
+
+const getDisplayName = wrappedComponent => wrappedComponent.displayName || wrappedComponent.name
 const isStateless = component => !component.render && !(component.prototype && component.prototype.render)
 
 /*
@@ -15,6 +17,10 @@ const SizeFetcher = (SubComponent, options = { noComparison: false }) => {
 
   // Managing component without state (functional component)
   if (isStateless(ComposedComponent)) {
+    if (typeof component !== 'function') {
+      warning('SizeFetcher has been called with neither a React Functional or Class Component')
+      return () => null
+    }
     ComposedComponent = class extends React.Component {
       render() {
         return component(this.props)
@@ -72,14 +78,10 @@ const SizeFetcher = (SubComponent, options = { noComparison: false }) => {
 
     render() {
       // Retrieve the component render tree
-      if (!super.render) return null
       const elementsTree = super.render()
 
-      let newProps = {}
-      if (elementsTree) {
-        // Here thanks to II, we can add a ref without the subComponent noticing
-        newProps = { ref: comp => (this.comp = comp) }
-      }
+      // Here thanks to II, we can add a ref without the subComponent noticing
+      let newProps = { ref: comp => (this.comp = comp) }
 
       // Create a new component from SubComponent render with new props
       const newElementsTree = React.cloneElement(elementsTree, newProps, elementsTree.props.children)
