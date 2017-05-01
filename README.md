@@ -59,7 +59,7 @@ class AwareComponent extends React.Component {
     return (
       <div>
         <h1>The size of the sub component is {JSON.stringify(subComponentSize, null, 2)}</h1>
-        <EnhancedComponent sizeChange={size => this.setState(size)} {/* ComponentToObserve usual props */} />
+        <EnhancedComponent sizeChange={size => this.setState({ subComponentSize: size })} {/* ComponentToObserve usual props */} />
       </div>
     )
   }

@@ -91,10 +91,11 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
         })
       } else if (child && typeof child.type === 'function') {
         // Forth case: The children is actually an InnerComponent (A composed component)
+
         // Enhance the inner component type so we can detect when it updates
         if (!registeredType[child.type.displayName]) registeredType[child.type.displayName] = EnhanceInnerComponent(child.type)
         const EnhancedInner = registeredType[child.type.displayName]
-        // const EnhancedInner = EnhanceInnerComponent(child.type)
+
         // Add the callback function to the props of the component
         const newProps = Object.assign({}, child.props, { key: 0, sizeMayChange: () => this.privateHandleSizeMayHaveChanged() })
 
