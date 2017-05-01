@@ -31,16 +31,6 @@ const SizeFetcher = (SubComponent, options = { noComparison: false }) => {
   }
 
   class Enhancer extends ComposedComponent {
-    constructor() {
-      super()
-
-      this.elementsTree = super.render()
-      this.enhancedChildren = this.privateEnhanceChildren(this.elementsTree.props.children)
-
-      this.privateHandleSizeMayHaveChanged = this.privateHandleSizeMayHaveChanged.bind(this)
-      this.privateSizeChanged = this.privateSizeChanged.bind(this)
-      this.privateRegisterComponentInfos = this.privateRegisterComponentInfos.bind(this)
-    }
     componentDidMount() {
       if (super.componentDidMount) super.componentDidMount()
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
@@ -84,41 +74,51 @@ const SizeFetcher = (SubComponent, options = { noComparison: false }) => {
       this.scrollHeight = scrollHeight
       this.scrollWidth = scrollWidth
     }
+    /*
+    * Here we will scan the children and search for composed component that it will
+    * enhance to detect when they update and notice our SizeFetcher component
+    */
     privateEnhanceChildren(child) {
       let children
+      // If there are children, retrieve them
       if (child && child.props && Object.prototype.hasOwnProperty.call(child.props, 'children')) children = child.props.children
 
-      // Zero case: the child is multiple
       if (child && Array.isArray(child)) {
+        // First case: the child is just an array of children
         return child.map(ch => this.privateEnhanceChildren(ch))
       } else if (children && Array.isArray(children)) {
-        // First case: the children is composed of multiple child
+        // Second case: the children are composed of multiple child
         return Object.assign({}, child, {
           props: Object.assign({}, child.props, {
             children: React.Children.map(children, ch => this.privateEnhanceChildren(ch)),
           }),
         })
       } else if (children && children instanceof Object) {
-        // Second case: The children is the only one
+        // Third case: The children is alone
         return Object.assign({}, child, {
           props: Object.assign({}, child.props, {
             children: this.privateEnhanceChildren(children),
           }),
         })
       } else if (child && typeof child.type === 'function') {
-        // Third case: The children is actually an innerComponent
+        // Forth case: The children is actually an InnerComponent (A composed component)
+        // Enhance the inner component type so we can detect when it updates
         const EnhancedInner = EnhanceInnerComponent(child.type)
-        const display = <EnhancedInner {...child.props} sizeMayChange={() => this.privateHandleSizeMayHaveChanged()} />
-        // console.log('-------', display, child)
-        return display
+        // Add the callback function to the props of the component
+        const newProps = Object.assign({}, child.props, { sizeMayChange: () => this.privateHandleSizeMayHaveChanged() })
+
+        const EnhancerInnerElement = React.createElement(EnhancedInner, newProps)
+        return EnhancerInnerElement
       }
-      // No enhancement
+      // No enhancement for String element
       return child
     }
 
     render() {
+      this.elementsTree = super.render()
+      this.enhancedChildren = this.privateEnhanceChildren(this.elementsTree.props.children)
       // Here thanks to II, we can add a ref without the subComponent noticing
-      const newProps = { ref: comp => (this.comp = comp) }
+      const newProps = Object.assign({}, this.elementsTree.props, { ref: comp => (this.comp = comp) })
       // Create a new component from SubComponent render with new props
       const newElementsTree = React.cloneElement(this.elementsTree, newProps, this.enhancedChildren)
       return newElementsTree
