@@ -15,7 +15,7 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
   const ComposedComponent = NormalizeComponent(SubComponent)
   if (!ComposedComponent) return () => null
 
-  const registeredType = {}
+  let registeredType = {}
 
   class Enhancer extends ComposedComponent {
     componentDidMount() {
