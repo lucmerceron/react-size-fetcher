@@ -1,3 +1,5 @@
+import React from 'react'
+
 import NormalizeComponent from './utils/NormalizeComponent'
 
 const getDisplayName = wrappedComponent => wrappedComponent.displayName || wrappedComponent.name
