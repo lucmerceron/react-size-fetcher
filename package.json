@@ -47,6 +47,7 @@
     "babel-cli": "6.24.1",
     "babel-eslint": "7.2.3",
     "babel-jest": "19.0.0",
+    "babel-preset-babili": "0.0.12",
     "babel-preset-es2015": "6.24.1",
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-3": "6.24.1",
@@ -67,7 +68,8 @@
     "presets": [
       "es2015",
       "react",
-      "stage-3"
+      "stage-3",
+      "babili"
     ]
   },
   "czConfig": {

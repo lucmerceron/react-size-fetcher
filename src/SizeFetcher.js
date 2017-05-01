@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import warning from './utils/warning'
 import EnhanceInnerComponent from './EnhanceInnerComponent'
 import NormalizeComponent from './utils/NormalizeComponent'
 
@@ -16,7 +15,7 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
   const ComposedComponent = NormalizeComponent(SubComponent)
   if (!ComposedComponent) return () => null
 
-  let registeredType = {}
+  const registeredType = {}
 
   class Enhancer extends ComposedComponent {
     componentDidMount() {

@@ -2,7 +2,7 @@
 
 ReactSizeFetcher is a simple-to-use React library to transparently and dynamically retrieve the DOM sizes of a sub-component.
 
-It is a tiny (4kB) library.
+It is a tiny (8kB) library.
 
 [![Travis Build](https://img.shields.io/travis/lucmerceron/react-size-fetcher.svg?style=flat-square)](https://travis-ci.org/lucmerceron/react-size-fetcher/) [![Version](https://img.shields.io/npm/v/react-size-fetcher.svg?style=flat-square)](https://github.com/lucmerceron/react-size-fetcher/releases) [![Code Coverage](https://img.shields.io/codecov/c/github/lucmerceron/react-size-fetcher.svg?style=flat-square)](https://codecov.io/gh/lucmerceron/react-size-fetcher)
 
@@ -32,7 +32,7 @@ sizeChange is a function with one argument, it will be called with an `Object` r
 * [options] (Object): Available options:
   * [noComparison] (Boolean): Default value: false. This option allow you to bypass SizeFetcher optimization. SizeFetcher will compare all the size and not call `sizeChange` if the size did not change between two updates.
   `const EnhancedComponent = SizeFetcher(ComponentToObserve, { noComparison: true})`
-  * [shallow] (Boolean): Default value: false. This option allow you to optimize SizeFetcher if your ComponentToObserve does not contain sub-component that can change in size.
+  * [shallow] (Boolean): Default value: false. This option allow you to optimize SizeFetcher if your ComponentToObserve does not contain sub-component (React Component) that can change in size. 
   `const EnhancedComponent = SizeFetcher(ComponentToObserve, { shallow: true})`
 ### Returns
 A Higher-Order React Component that inherit from your initial component and take one more props named `sizeChange`. sizeChange is suceptible to be called when the component receives new props, updates its state or when the window resize.
