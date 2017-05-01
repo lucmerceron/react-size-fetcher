@@ -4,7 +4,7 @@ ReactSizeFetcher is a simple-to-use React library to transparently and dynamical
 
 It is a tiny (8kB) library.
 
-[![Travis Build](https://img.shields.io/travis/wing-eu/react-size-fetcher.svg?style=flat-square)](https://travis-ci.org/wing-eu/react-size-fetcher/) [![Version](https://img.shields.io/npm/v/react-size-fetcher.svg?style=flat-square)](https://github.com/lucmerceron/react-size-fetcher/releases) [![Code Coverage](https://img.shields.io/codecov/c/github/lucmerceron/react-size-fetcher.svg?style=flat-square)](https://codecov.io/gh/lucmerceron/react-size-fetcher)
+[![Travis Build](https://img.shields.io/travis/wing-eu/react-size-fetcher.svg?style=flat-square)](https://travis-ci.org/wing-eu/react-size-fetcher/) [![Version](https://img.shields.io/npm/v/react-size-fetcher.svg?style=flat-square)](https://github.com/lucmerceron/react-size-fetcher/releases) [![Code Coverage](https://img.shields.io/codecov/c/github/wing-eu/react-size-fetcher.svg?style=flat-square)](https://codecov.io/gh/wing-eu/react-size-fetcher)
 
 ## Installation
 
