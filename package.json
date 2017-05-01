@@ -9,7 +9,7 @@
     "report-coverage": "cat ./coverage/lcov.info | codecov",
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "babel --out-dir dist --ignore *.test.js src",
+    "build": "babel --out-dir dist --ignore *.test.js,./src/test/* src",
     "prebuild": "rimraf dist",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },

@@ -111,6 +111,7 @@ describe('Index', () => {
     const EnhancedComposedNormalComponent = SizeFetcher(ComposedNormalComponent, { noComparison: true })
     const EnhancedComposedFunctionalComponent = SizeFetcher(ComposedFunctionalComponent)
     const EnhancedComposedDynamicComponent = SizeFetcher(ComposedDynamicComponent, { noComparison: true })
+    const EnhancedComposedDynamicShallowComponent = SizeFetcher(ComposedDynamicComponent, { noComparison: true, shallow: true })
 
     const composedNormalComponentProps = {
       sizeChange: jest.fn(),
@@ -129,10 +130,17 @@ describe('Index', () => {
       content: "ComposedNormal",
       subContent: "Normal",
     }
+    const composedDynamicShallowComponentProps = {
+      sizeChange: jest.fn(),
+      lifeCycleCallback: jest.fn(),
+      content: "ComposedNormal",
+      subContent: "Normal",
+    }
 
     const WrapperEnhancedComposedNormalComponent = mount(<EnhancedComposedNormalComponent {...composedNormalComponentProps} />)
     const WrapperEnhancedComposedFunctionalComponent = mount(<EnhancedComposedFunctionalComponent {...composedFunctionalComponentProps} />)
     const WrapperEnhancedComposedDynamicComponent = mount(<EnhancedComposedDynamicComponent {...composedDynamicComponentProps} />)
+    const WrapperEnhancedComposedShallowDynamicComponent = mount(<EnhancedComposedDynamicShallowComponent {...composedDynamicShallowComponentProps} />)
 
     it('should render composed components correctly', () => {
       expect(WrapperEnhancedComposedNormalComponent.find('.composed-normal-component').node).toBeDefined()
@@ -173,6 +181,18 @@ describe('Index', () => {
     it('should call sizeChange when dynamic sub-component changes by itself', () => {
       expect(composedDynamicComponentProps.sizeChange.mock.calls.length).toEqual(4)
       expect(WrapperEnhancedComposedDynamicComponent.html()).toContain("Dynamic")
+    })
+    it('should not call sizeChange when dynamic sub-component changes by itself on shallowed component', () => {
+      expect(composedDynamicShallowComponentProps.sizeChange.mock.calls.length).toEqual(3)
+      expect(WrapperEnhancedComposedShallowDynamicComponent.html()).toContain("Dynamic")
+    })
+    it('should not remount sub element state when SizeFetcher component update', () => {
+      WrapperEnhancedComposedDynamicComponent.setProps({ content: 'New ComposedNormal'})
+      expect(WrapperEnhancedComposedDynamicComponent.html()).toContain('New ComposedNormal')
+      // didMount called only once: [ [ 'didMount' ], [ 'didUpdate' ], [ 'didUpdate' ] ]
+      expect(composedDynamicComponentProps.lifeCycleCallback.mock.calls[0]
+        .filter(lifeCycle => lifeCycle === 'didMount').length).toEqual(1)
+      expect(composedDynamicComponentProps.sizeChange.mock.calls.length).toEqual(5)
     })
   })
 })

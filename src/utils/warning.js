@@ -1,4 +1,5 @@
 export default function warning(message) {
+  /* istanbul ignore next */
   /* eslint-disable no-console */
   if (typeof console !== 'undefined' && typeof console.error === 'function') {
     console.error(message)

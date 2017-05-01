@@ -9,7 +9,15 @@ class DynamicComponent extends React.Component {
       dynamicState: "Default",
     }
   }
+  componentDidUpdate() {
+    const { lifeCycleCallback } = this.props
+
+    lifeCycleCallback('didUpdate')
+  }
   componentDidMount() {
+    const { lifeCycleCallback } = this.props
+
+    lifeCycleCallback('didMount')
     this.setState({
       dynamicState: "Dynamic",
     })
@@ -20,7 +28,7 @@ class DynamicComponent extends React.Component {
 
     return (
       <div className="simple-dynamic-component">
-        <h1>A Random Title</h1>
+        <h1><span>A Random Title</span></h1>
         <h2>A Random Sub-Title</h2>
         <p>{content}</p>
         <p>{dynamicState}</p>
