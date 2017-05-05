@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import EnhanceInnerComponent from './EnhanceInnerComponent'
-import NormalizeComponent from './utils/NormalizeComponent'
+import EnhanceReactElement from './EnhanceReactElement'
+import warning from './utils/warning'
 
-const getDisplayName = wrappedComponent => wrappedComponent.displayName || wrappedComponent.name
+import { getDisplayName, isStateless } from './utils/utils'
 
 /*
 * Size Inversion Inheritence Higher Order Component
@@ -12,12 +12,30 @@ const getDisplayName = wrappedComponent => wrappedComponent.displayName || wrapp
 * It will call the sizeChange function when the size of the sub component is first known and then everytime it changes
 */
 const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: false }) => {
-  const ComposedComponent = NormalizeComponent(SubComponent)
-  if (!ComposedComponent) return () => null
+  // const ComposedComponent = NormalizeComponent(SubComponent)
+  const component = SubComponent
+  let ComposedComponent = component
 
-  const registeredType = {}
+  // Managing component without state (functional component)
+  if (isStateless(ComposedComponent)) {
+    if (typeof component !== 'function') {
+      warning('SizeFetcher has been called with neither a React Functional or Class Component')
+      return () => null
+    }
+    ComposedComponent = class extends React.Component {
+      render() {
+        return component(this.props)
+      }
+    }
+    ComposedComponent.displayName = getDisplayName(component)
+  }
 
   class Enhancer extends ComposedComponent {
+    constructor() {
+      super()
+
+      this.privateHandleSizeMayHaveChanged = this.privateHandleSizeMayHaveChanged.bind(this)
+    }
     componentDidMount() {
       if (super.componentDidMount) super.componentDidMount()
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
@@ -62,53 +80,13 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
       this.scrollHeight = scrollHeight
       this.scrollWidth = scrollWidth
     }
-    /*
-    * Here we will scan the children and search for composed component that it will
-    * enhance to detect when they update and notice our SizeFetcher component
-    */
-    privateEnhanceChildren(child) {
-      let children
-      // If there are children, retrieve them
-      if (child && child.props && Object.prototype.hasOwnProperty.call(child.props, 'children')) children = child.props.children
-
-      if (child && Array.isArray(child)) {
-        // First case: the child is just an array of children
-        return child.map(ch => this.privateEnhanceChildren(ch))
-      } else if (children && Array.isArray(children)) {
-        // Second case: the children are composed of multiple child
-        return Object.assign({}, child, {
-          props: Object.assign({}, child.props, {
-            children: React.Children.map(children, ch => this.privateEnhanceChildren(ch)),
-          }),
-        })
-      } else if (children && children instanceof Object) {
-        // Third case: The children is alone
-        return Object.assign({}, child, {
-          props: Object.assign({}, child.props, {
-            children: this.privateEnhanceChildren(children),
-          }),
-        })
-      } else if (child && typeof child.type === 'function') {
-        // Forth case: The children is actually an InnerComponent (A composed component)
-
-        // Enhance the inner component type so we can detect when it updates
-        if (!registeredType[child.type.displayName]) registeredType[child.type.displayName] = EnhanceInnerComponent(child.type)
-        const EnhancedInner = registeredType[child.type.displayName]
-
-        // Add the callback function to the props of the component
-        const newProps = Object.assign({}, child.props, { key: 0, sizeMayChange: () => this.privateHandleSizeMayHaveChanged() })
-
-        const EnhancerInnerElement = React.createElement(EnhancedInner, newProps)
-        return EnhancerInnerElement
-      }
-      // No enhancement for String element
-      return child
-    }
 
     render() {
       const elementsTree = super.render()
 
-      const newChildren = options.shallow ? elementsTree.props.children : this.privateEnhanceChildren(elementsTree.props.children)
+      const newChildren = options.shallow
+        ? elementsTree.props.children
+        : EnhanceReactElement(elementsTree.props.children, this.privateHandleSizeMayHaveChanged)
       // Here thanks to II, we can add a ref without the subComponent noticing
       const newProps = Object.assign({}, elementsTree.props, { ref: comp => (this.comp = comp) })
       // Create a new component from SubComponent render with new props
