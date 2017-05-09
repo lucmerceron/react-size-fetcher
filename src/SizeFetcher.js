@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import EnhanceReactElement from './EnhanceReactElement'
+import EnhanceReactChildren from './EnhanceReactChildren'
 import warning from './utils/warning'
 
 import { getDisplayName, isStateless } from './utils/utils'
@@ -31,11 +31,6 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
   }
 
   class Enhancer extends ComposedComponent {
-    constructor() {
-      super()
-
-      this.privateHandleSizeMayHaveChanged = this.privateHandleSizeMayHaveChanged.bind(this)
-    }
     componentDidMount() {
       if (super.componentDidMount) super.componentDidMount()
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
@@ -86,7 +81,7 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
 
       const newChildren = options.shallow
         ? elementsTree.props.children
-        : EnhanceReactElement(elementsTree.props.children, this.privateHandleSizeMayHaveChanged)
+        : EnhanceReactChildren(elementsTree.props.children, this.privateHandleSizeMayHaveChanged.bind(this))
       // Here thanks to II, we can add a ref without the subComponent noticing
       const newProps = Object.assign({}, elementsTree.props, { ref: comp => (this.comp = comp) })
       // Create a new component from SubComponent render with new props
@@ -97,7 +92,7 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
   }
   Enhancer.displayName = `SizeFetcher(${getDisplayName(SubComponent)})`
   Enhancer.propTypes = {
-    sizeChange: PropTypes.any.isRequired,
+    sizeChange: PropTypes.func.isRequired,
   }
 
   return Enhancer

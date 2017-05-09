@@ -18,25 +18,26 @@ const EnhanceReactElement = (child, callback) => {
     const EnhancedInner = registeredType[funcSignature]
 
     // Add the callback function to the props of the component
-    const newProps = Object.assign({}, child.props, { sizeMayChange: () => callback() })
+    const newProps = Object.assign({}, child.props, { sizeMayChange: callback })
     // Children of the innerElement are managed by the enhancer
     const EnhancerInnerElement = React.createElement(EnhancedInner, newProps)
 
     return EnhancerInnerElement
-  } else {
+  } else if (child && child instanceof Object) {
     // Return the child with its children enhanced
     return Object.assign({}, child, {
       props: Object.assign({}, child.props, {
-        children: EnhanceChildren(child.props.children, callback)
+        children: EnhanceReactChildren(child.props.children, callback)
       })
     })
   }
+  return child
 }
 
 /*
 * Apply EnhanceReactElement to each child of children
 */
-const EnhanceChildren = (children, callback) => {
+const EnhanceReactChildren = (children, callback) => {
   if (Array.isArray(children)) {
     return children.map(child => EnhanceReactElement(child, callback))
   } else if (children instanceof Object) {
@@ -46,4 +47,4 @@ const EnhanceChildren = (children, callback) => {
   }
 }
 
-export default EnhanceChildren
+export default EnhanceReactChildren

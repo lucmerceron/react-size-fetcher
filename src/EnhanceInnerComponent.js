@@ -1,6 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-import EnhanceReactElement from './EnhanceReactElement'
+import EnhanceReactChildren from './EnhanceReactChildren'
 
 import { getDisplayName, isStateless } from './utils/utils'
 
@@ -25,15 +26,16 @@ const EnhanceInnerComponent = InnerComponent => {
 
   class EnhancerInnerComponent extends ComposedComponent {
     componentDidUpdate() {
-      if (super.componentDidUpdate) super.componentDidUpdate()
+      if (super.componentDidUpdate) super.componentDidUpdate(...arguments)
 
       this.props.sizeMayChange()
     }
     render() {
       // Here we need to apply the same principle as SizeFetcher and enhance the inner component
       const innerElementsTree = super.render()
+      if (!innerElementsTree) return null
 
-      const newChildren = EnhanceReactElement(innerElementsTree.props.children, this.props.sizeMayChange)
+      const newChildren = EnhanceReactChildren(innerElementsTree.props.children, this.props.sizeMayChange)
       const newElementsTree = React.cloneElement(innerElementsTree, innerElementsTree.props, newChildren)
 
       return newElementsTree
@@ -41,6 +43,9 @@ const EnhanceInnerComponent = InnerComponent => {
   }
 
   EnhancerInnerComponent.displayName = `EnhancerInner(${getDisplayName(InnerComponent)})`
+  EnhancerInnerComponent.propTypes = {
+    sizeMayChange: PropTypes.func.isRequired,
+  }
 
   return EnhancerInnerComponent
 }
