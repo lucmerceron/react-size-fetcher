@@ -27,7 +27,7 @@ const EnhanceReactElement = (child, callback) => {
     // Return the child with its children enhanced
     return Object.assign({}, child, {
       props: Object.assign({}, child.props, {
-        children: EnhanceReactChildren(child.props.children, callback)
+        children: EnhanceReactChildren(child.props ? child.props.children : null, callback)
       })
     })
   }
