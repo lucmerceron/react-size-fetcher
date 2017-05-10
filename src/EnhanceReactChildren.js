@@ -39,7 +39,7 @@ const EnhanceReactElement = (child, callback) => {
 */
 const EnhanceReactChildren = (children, callback) => {
   if (Array.isArray(children)) {
-    return children.map(child => EnhanceReactElement(child, callback))
+    return children.map(child => EnhanceReactChildren(child, callback))
   } else if (children instanceof Object) {
     return EnhanceReactElement(children, callback)    
   } else {
