@@ -30,10 +30,10 @@ sizeChange is a function with one argument, it will be called with an `Object` r
 ### Arguments
 * Component (React Component): This can be a [React Functional or Class Component](https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components).
 * [options] (Object): Available options:
-  * [noComparison] (Boolean): Default value: false. This option allow you to bypass SizeFetcher optimization. SizeFetcher will compare all the size and not call `sizeChange` if the size did not change between two updates.
+  * [noComparison] (Boolean): Default value: false. This option allow you to bypass SizeFetcher optimization. SizeFetcher usually compare all the size and do not call `sizeChange` if the size did not change between two updates.
   `const EnhancedComponent = SizeFetcher(ComponentToObserve, { noComparison: true})`
-  * [shallow] (Boolean): Default value: false. This option allow you to optimize SizeFetcher if your ComponentToObserve does not contain sub-component (React Component) that can change in size. 
-  `const EnhancedComponent = SizeFetcher(ComponentToObserve, { shallow: true})`
+  * [watchSubComponents] (Array): Default value: []. This option allow you to indicate if you want to watch specific sub-components. When defined, SizeFetcher will go through the render method of each sub component of the ComponentToObserve and add a proxy that will call `sizeChange` function when they update.
+  `const EnhancedComponent = SizeFetcher(ComponentToObserve, { watchSubComponents: ['Input', 'Button'] })`
 ### Returns
 A Higher-Order React Component that inherit from your initial component and take one more props named `sizeChange`. sizeChange is suceptible to be called when the component receives new props, updates its state or when the window resize.
 
@@ -77,6 +77,8 @@ or with a decorator
 class ComponentToObserve extends React.Component {
   ...
 ```
+
+Some advanced examples can be find in the [examples](https://github.com/wing-eu/react-size-fetcher/tree/master/examples) folder of this repository.
 
 ## Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
