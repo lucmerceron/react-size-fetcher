@@ -37,7 +37,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var EnhancedComponent = (0, _index2.default)(_ComponentToObserve2.default);
+var EnhancedComponent = (0, _index2.default)(_ComponentToObserve2.default, { watchSubComponents: ['SimpleComponent', 'InsideComponent'] });
 
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
@@ -108,7 +108,7 @@ var App = function (_React$Component) {
 
 exports.default = App;
 
-},{"../../src/index":192,"./ComponentToObserve":2,"./SimpleComponent":4,"prop-types":35,"react":188}],2:[function(require,module,exports){
+},{"../../src/index":190,"./ComponentToObserve":2,"./SimpleComponent":4,"prop-types":35,"react":188}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21211,6 +21211,99 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _proxyHighjacker = require('./proxyHighjacker');
+
+var _proxyHighjacker2 = _interopRequireDefault(_proxyHighjacker);
+
+var _transparentHighjacker = require('./transparentHighjacker');
+
+var _transparentHighjacker2 = _interopRequireDefault(_transparentHighjacker);
+
+var _utils = require('./utils/utils');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var registeredType = {};
+
+/*
+* Enhance the child with the prop sizeMayChange
+* A react Element can be of two types:
+*  1. function (FTRE): Components created by the user
+*  2. string (STRE): DOM nodes
+*/
+var enhanceReactElement = function enhanceReactElement(child, callback, componentsToWatch) {
+  if (child && typeof child.type === 'function') {
+    // One way to identify surely, without assumption on the name, a function
+    var funcSignature = (componentsToWatch.indexOf((0, _utils.getDisplayName)(child.type)) > -1 ? 'observed' : 'transparent') + '-' + child.type.toString();
+
+    // We register the innerEnhancer so it won't remount sub element when update
+    if (!registeredType[funcSignature]) {
+      if (componentsToWatch.indexOf((0, _utils.getDisplayName)(child.type)) > -1) {
+        registeredType[funcSignature] = (0, _proxyHighjacker2.default)(child.type, callback, componentsToWatch);
+      } else {
+        registeredType[funcSignature] = (0, _transparentHighjacker2.default)(child.type, callback, componentsToWatch);
+      }
+    }
+    var EnhancedInner = registeredType[funcSignature];
+
+    // Add the callback function to the props of the component
+    var newProps = Object.assign({}, child.props, componentsToWatch.indexOf((0, _utils.getDisplayName)(child.type)) > -1 ? { sizeMayChange: callback } : {});
+    // Children of the innerElement are managed by the enhancer
+    var EnhancerInnerElement = _react2.default.createElement(EnhancedInner, newProps);
+
+    return EnhancerInnerElement;
+  }
+  // Return the child with its children enhanced
+  return Object.assign({}, child, {
+    props: Object.assign({}, child.props, {
+      children: enhanceReactChildren(child.props ? child.props.children : null, callback, componentsToWatch)
+    })
+  });
+};
+
+/*
+* Apply enhanceReactElement to each child of children
+*/
+var enhanceReactChildren = function enhanceReactChildren(children, callback, componentsToWatch) {
+  if (Array.isArray(children)) {
+    return _react2.default.Children.map(children, function (child) {
+      return enhanceReactChildren(child, callback, componentsToWatch);
+    });
+  } else if (children instanceof Object) {
+    return enhanceReactElement(children, callback, componentsToWatch);
+  } else {
+    return children;
+  }
+};
+
+exports.default = enhanceReactChildren;
+
+},{"./proxyHighjacker":191,"./transparentHighjacker":193,"./utils/utils":194,"react":188}],190:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _sizeFetcher = require('./sizeFetcher');
+
+var _sizeFetcher2 = _interopRequireDefault(_sizeFetcher);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _sizeFetcher2.default;
+
+},{"./sizeFetcher":192}],191:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -21219,9 +21312,13 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _EnhanceReactElement = require('./EnhanceReactElement');
+var _propTypes = require('prop-types');
 
-var _EnhanceReactElement2 = _interopRequireDefault(_EnhanceReactElement);
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _enhanceReactChildren = require('./enhanceReactChildren');
+
+var _enhanceReactChildren2 = _interopRequireDefault(_enhanceReactChildren);
 
 var _utils = require('./utils/utils');
 
@@ -21233,19 +21330,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var EnhanceInnerComponent = function EnhanceInnerComponent(InnerComponent) {
+var proxyHighjacker = function proxyHighjacker(InnerComponent, callback, componentsToWatch) {
   // const ComposedComponent = NormalizeComponent(InnerComponent)
   var component = InnerComponent;
   var ComposedComponent = component;
 
   // Managing component without state (functional component)
   if ((0, _utils.isStateless)(ComposedComponent)) {
-    if (typeof component !== 'function') {
-      warning('SizeFetcher has been called with neither a React Functional or Class Component');
-      return function () {
-        return null;
-      };
-    }
     ComposedComponent = function (_React$Component) {
       _inherits(ComposedComponent, _React$Component);
 
@@ -21267,118 +21358,49 @@ var EnhanceInnerComponent = function EnhanceInnerComponent(InnerComponent) {
     ComposedComponent.displayName = (0, _utils.getDisplayName)(component);
   }
 
-  var EnhancerInnerComponent = function (_ComposedComponent) {
-    _inherits(EnhancerInnerComponent, _ComposedComponent);
+  var ProxyHighjacker = function (_ComposedComponent) {
+    _inherits(ProxyHighjacker, _ComposedComponent);
 
-    function EnhancerInnerComponent() {
-      _classCallCheck(this, EnhancerInnerComponent);
+    function ProxyHighjacker() {
+      _classCallCheck(this, ProxyHighjacker);
 
-      return _possibleConstructorReturn(this, (EnhancerInnerComponent.__proto__ || Object.getPrototypeOf(EnhancerInnerComponent)).apply(this, arguments));
+      return _possibleConstructorReturn(this, (ProxyHighjacker.__proto__ || Object.getPrototypeOf(ProxyHighjacker)).apply(this, arguments));
     }
 
-    _createClass(EnhancerInnerComponent, [{
+    _createClass(ProxyHighjacker, [{
       key: 'componentDidUpdate',
       value: function componentDidUpdate() {
-        if (_get(EnhancerInnerComponent.prototype.__proto__ || Object.getPrototypeOf(EnhancerInnerComponent.prototype), 'componentDidUpdate', this)) _get(EnhancerInnerComponent.prototype.__proto__ || Object.getPrototypeOf(EnhancerInnerComponent.prototype), 'componentDidUpdate', this).call(this);
-
+        if (_get(ProxyHighjacker.prototype.__proto__ || Object.getPrototypeOf(ProxyHighjacker.prototype), 'componentDidUpdate', this)) _get(ProxyHighjacker.prototype.__proto__ || Object.getPrototypeOf(ProxyHighjacker.prototype), 'componentDidUpdate', this).apply(this, arguments);
         this.props.sizeMayChange();
       }
     }, {
       key: 'render',
       value: function render() {
         // Here we need to apply the same principle as SizeFetcher and enhance the inner component
-        var innerElementsTree = _get(EnhancerInnerComponent.prototype.__proto__ || Object.getPrototypeOf(EnhancerInnerComponent.prototype), 'render', this).call(this);
+        var innerElementsTree = _get(ProxyHighjacker.prototype.__proto__ || Object.getPrototypeOf(ProxyHighjacker.prototype), 'render', this).call(this);
+        if (!innerElementsTree) return null;
 
-        var newChildren = (0, _EnhanceReactElement2.default)(innerElementsTree.props.children, this.props.sizeMayChange);
+        var newChildren = (0, _enhanceReactChildren2.default)(innerElementsTree.props.children, callback, componentsToWatch);
         var newElementsTree = _react2.default.cloneElement(innerElementsTree, innerElementsTree.props, newChildren);
 
         return newElementsTree;
       }
     }]);
 
-    return EnhancerInnerComponent;
+    return ProxyHighjacker;
   }(ComposedComponent);
 
-  EnhancerInnerComponent.displayName = 'EnhancerInner(' + (0, _utils.getDisplayName)(InnerComponent) + ')';
+  ProxyHighjacker.displayName = 'SizeFetcherInner(' + (0, _utils.getDisplayName)(InnerComponent) + ')';
+  ProxyHighjacker.propTypes = {
+    sizeMayChange: _propTypes2.default.func.isRequired
+  };
 
-  return EnhancerInnerComponent;
+  return ProxyHighjacker;
 };
 
-exports.default = EnhanceInnerComponent;
+exports.default = proxyHighjacker;
 
-},{"./EnhanceReactElement":190,"./utils/utils":193,"react":188}],190:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _EnhanceInnerComponent = require('./EnhanceInnerComponent');
-
-var _EnhanceInnerComponent2 = _interopRequireDefault(_EnhanceInnerComponent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var registeredType = {};
-/*
-* Here we will scan the children and search for composed component that it will
-* enhance to detect when they update and notice our SizeFetcher component
-*/
-var EnhanceReactElement = function EnhanceReactElement(child, callback) {
-  var children = void 0;
-  // If there are children, retrieve them
-  if (child && child.props && Object.prototype.hasOwnProperty.call(child.props, 'children')) children = child.props.children;
-
-  if (child && Array.isArray(child)) {
-    // First case: the child is just an array of children
-    return child.map(function (ch) {
-      return EnhanceReactElement(ch, callback);
-    });
-  } else if (children && Array.isArray(children)) {
-    // Second case: the children are composed of multiple child
-    return Object.assign({}, child, {
-      props: Object.assign({}, child.props, {
-        children: _react2.default.Children.map(children, function (ch) {
-          return EnhanceReactElement(ch, callback);
-        })
-      })
-    });
-  } else if (children && children instanceof Object) {
-    // Third case: The children is alone
-    return Object.assign({}, child, {
-      props: Object.assign({}, child.props, {
-        children: EnhanceReactElement(children, callback)
-      })
-    });
-  } else if (child && typeof child.type === 'function') {
-    // Forth case: The children is actually an InnerComponent (A composed component)
-    // Enhance the inner component type so we can detect when it updates
-    // It is the limit, React reconciliation process
-
-    // Only way to identify surely (without asumpsion on code base) a function
-    var typeId = child.type.toString();
-    if (!registeredType[typeId]) registeredType[typeId] = (0, _EnhanceInnerComponent2.default)(child.type);
-    var EnhancedInner = registeredType[typeId];
-
-    // Add the callback function to the props of the component
-    var newProps = Object.assign({}, child.props, { sizeMayChange: function sizeMayChange() {
-        return callback();
-      } });
-
-    var EnhancerInnerElement = _react2.default.createElement(EnhancedInner, newProps);
-    return EnhancerInnerElement;
-  }
-  // No enhancement for String element
-  return child;
-};
-
-exports.default = EnhanceReactElement;
-
-},{"./EnhanceInnerComponent":189,"react":188}],191:[function(require,module,exports){
+},{"./enhanceReactChildren":189,"./utils/utils":194,"prop-types":35,"react":188}],192:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21397,9 +21419,9 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _EnhanceReactElement = require('./EnhanceReactElement');
+var _enhanceReactChildren = require('./enhanceReactChildren');
 
-var _EnhanceReactElement2 = _interopRequireDefault(_EnhanceReactElement);
+var _enhanceReactChildren2 = _interopRequireDefault(_enhanceReactChildren);
 
 var _warning = require('./utils/warning');
 
@@ -21420,8 +21442,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 * This component is usefull when you need a transparant way for knowing the size of a sub component
 * It will call the sizeChange function when the size of the sub component is first known and then everytime it changes
 */
-var SizeFetcher = function SizeFetcher(SubComponent) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { noComparison: false, shallow: false };
+var sizeFetcher = function sizeFetcher(SubComponent) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  var newOptions = Object.assign({ noComparison: false, watchSubComponents: [] }, options);
 
   // const ComposedComponent = NormalizeComponent(SubComponent)
   var component = SubComponent;
@@ -21430,7 +21454,7 @@ var SizeFetcher = function SizeFetcher(SubComponent) {
   // Managing component without state (functional component)
   if ((0, _utils.isStateless)(ComposedComponent)) {
     if (typeof component !== 'function') {
-      (0, _warning2.default)('SizeFetcher has been called with neither a React Functional or Class Component');
+      (0, _warning2.default)('sizeFetcher has been called with neither a React Functional or Class Component');
       return function () {
         return null;
       };
@@ -21456,22 +21480,19 @@ var SizeFetcher = function SizeFetcher(SubComponent) {
     ComposedComponent.displayName = (0, _utils.getDisplayName)(component);
   }
 
-  var Enhancer = function (_ComposedComponent) {
-    _inherits(Enhancer, _ComposedComponent);
+  var SizeFetcher = function (_ComposedComponent) {
+    _inherits(SizeFetcher, _ComposedComponent);
 
-    function Enhancer() {
-      _classCallCheck(this, Enhancer);
+    function SizeFetcher() {
+      _classCallCheck(this, SizeFetcher);
 
-      var _this2 = _possibleConstructorReturn(this, (Enhancer.__proto__ || Object.getPrototypeOf(Enhancer)).call(this));
-
-      _this2.privateHandleSizeMayHaveChanged = _this2.privateHandleSizeMayHaveChanged.bind(_this2);
-      return _this2;
+      return _possibleConstructorReturn(this, (SizeFetcher.__proto__ || Object.getPrototypeOf(SizeFetcher)).apply(this, arguments));
     }
 
-    _createClass(Enhancer, [{
+    _createClass(SizeFetcher, [{
       key: 'componentDidMount',
       value: function componentDidMount() {
-        if (_get(Enhancer.prototype.__proto__ || Object.getPrototypeOf(Enhancer.prototype), 'componentDidMount', this)) _get(Enhancer.prototype.__proto__ || Object.getPrototypeOf(Enhancer.prototype), 'componentDidMount', this).call(this);
+        if (_get(SizeFetcher.prototype.__proto__ || Object.getPrototypeOf(SizeFetcher.prototype), 'componentDidMount', this)) _get(SizeFetcher.prototype.__proto__ || Object.getPrototypeOf(SizeFetcher.prototype), 'componentDidMount', this).call(this);
         var _comp = this.comp,
             clientHeight = _comp.clientHeight,
             clientWidth = _comp.clientWidth,
@@ -21486,14 +21507,14 @@ var SizeFetcher = function SizeFetcher(SubComponent) {
     }, {
       key: 'componentDidUpdate',
       value: function componentDidUpdate() {
-        if (_get(Enhancer.prototype.__proto__ || Object.getPrototypeOf(Enhancer.prototype), 'componentDidUpdate', this)) _get(Enhancer.prototype.__proto__ || Object.getPrototypeOf(Enhancer.prototype), 'componentDidUpdate', this).call(this);
+        if (_get(SizeFetcher.prototype.__proto__ || Object.getPrototypeOf(SizeFetcher.prototype), 'componentDidUpdate', this)) _get(SizeFetcher.prototype.__proto__ || Object.getPrototypeOf(SizeFetcher.prototype), 'componentDidUpdate', this).call(this);
 
         this.privateHandleSizeMayHaveChanged();
       }
     }, {
       key: 'componentWillUnmount',
       value: function componentWillUnmount() {
-        if (_get(Enhancer.prototype.__proto__ || Object.getPrototypeOf(Enhancer.prototype), 'componentWillUnmount', this)) _get(Enhancer.prototype.__proto__ || Object.getPrototypeOf(Enhancer.prototype), 'componentWillUnmount', this).call(this);
+        if (_get(SizeFetcher.prototype.__proto__ || Object.getPrototypeOf(SizeFetcher.prototype), 'componentWillUnmount', this)) _get(SizeFetcher.prototype.__proto__ || Object.getPrototypeOf(SizeFetcher.prototype), 'componentWillUnmount', this).call(this);
 
         window.removeEventListener('resize', this.privateHandleSizeMayHaveChanged.bind(this));
       }
@@ -21519,7 +21540,7 @@ var SizeFetcher = function SizeFetcher(SubComponent) {
             scrollWidth = _comp2.scrollWidth;
 
 
-        if (options.noComparison || clientWidth !== this.clientWidth || clientHeight !== this.clientHeight || scrollHeight !== this.scrollHeight || scrollWidth !== this.scrollWidth) {
+        if (newOptions.noComparison || clientWidth !== this.clientWidth || clientHeight !== this.clientHeight || scrollHeight !== this.scrollHeight || scrollWidth !== this.scrollWidth) {
           this.privateSizeChanged(clientHeight, clientWidth, scrollHeight, scrollWidth);
         }
       }
@@ -21537,9 +21558,9 @@ var SizeFetcher = function SizeFetcher(SubComponent) {
       value: function render() {
         var _this3 = this;
 
-        var elementsTree = _get(Enhancer.prototype.__proto__ || Object.getPrototypeOf(Enhancer.prototype), 'render', this).call(this);
+        var elementsTree = _get(SizeFetcher.prototype.__proto__ || Object.getPrototypeOf(SizeFetcher.prototype), 'render', this).call(this);
 
-        var newChildren = options.shallow ? elementsTree.props.children : (0, _EnhanceReactElement2.default)(elementsTree.props.children, this.privateHandleSizeMayHaveChanged);
+        var newChildren = newOptions.watchSubComponents.length > 0 ? (0, _enhanceReactChildren2.default)(elementsTree.props.children, this.privateHandleSizeMayHaveChanged.bind(this), newOptions.watchSubComponents) : elementsTree.props.children;
         // Here thanks to II, we can add a ref without the subComponent noticing
         var newProps = Object.assign({}, elementsTree.props, { ref: function ref(comp) {
             return _this3.comp = comp;
@@ -21551,35 +21572,114 @@ var SizeFetcher = function SizeFetcher(SubComponent) {
       }
     }]);
 
-    return Enhancer;
+    return SizeFetcher;
   }(ComposedComponent);
 
-  Enhancer.displayName = 'SizeFetcher(' + (0, _utils.getDisplayName)(SubComponent) + ')';
-  Enhancer.propTypes = {
-    sizeChange: _propTypes2.default.any.isRequired
+  SizeFetcher.displayName = 'SizeFetcher(' + (0, _utils.getDisplayName)(SubComponent) + ')';
+  SizeFetcher.propTypes = {
+    sizeChange: _propTypes2.default.func.isRequired
   };
 
-  return Enhancer;
+  return SizeFetcher;
 };
 
-exports.default = SizeFetcher;
+exports.default = sizeFetcher;
 
-},{"./EnhanceReactElement":190,"./utils/utils":193,"./utils/warning":194,"prop-types":35,"react":188}],192:[function(require,module,exports){
+},{"./enhanceReactChildren":189,"./utils/utils":194,"./utils/warning":195,"prop-types":35,"react":188}],193:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _SizeFetcher = require('./SizeFetcher');
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _SizeFetcher2 = _interopRequireDefault(_SizeFetcher);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _enhanceReactChildren = require('./enhanceReactChildren');
+
+var _enhanceReactChildren2 = _interopRequireDefault(_enhanceReactChildren);
+
+var _utils = require('./utils/utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _SizeFetcher2.default;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-},{"./SizeFetcher":191}],193:[function(require,module,exports){
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var transparentHighjacker = function transparentHighjacker(InnerComponent, callback, componentsToWatch) {
+  // const ComposedComponent = NormalizeComponent(InnerComponent)
+  var component = InnerComponent;
+  var ComposedComponent = component;
+
+  // Managing component without state (functional component)
+  if ((0, _utils.isStateless)(ComposedComponent)) {
+    ComposedComponent = function (_React$Component) {
+      _inherits(ComposedComponent, _React$Component);
+
+      function ComposedComponent() {
+        _classCallCheck(this, ComposedComponent);
+
+        return _possibleConstructorReturn(this, (ComposedComponent.__proto__ || Object.getPrototypeOf(ComposedComponent)).apply(this, arguments));
+      }
+
+      _createClass(ComposedComponent, [{
+        key: 'render',
+        value: function render() {
+          return component(this.props);
+        }
+      }]);
+
+      return ComposedComponent;
+    }(_react2.default.Component);
+    ComposedComponent.displayName = (0, _utils.getDisplayName)(component);
+  }
+
+  var TransparentHighjacker = function (_ComposedComponent) {
+    _inherits(TransparentHighjacker, _ComposedComponent);
+
+    function TransparentHighjacker() {
+      _classCallCheck(this, TransparentHighjacker);
+
+      return _possibleConstructorReturn(this, (TransparentHighjacker.__proto__ || Object.getPrototypeOf(TransparentHighjacker)).apply(this, arguments));
+    }
+
+    _createClass(TransparentHighjacker, [{
+      key: 'render',
+      value: function render() {
+        // Here we need to apply the same principle as SizeFetcher and enhance the inner component
+        var innerElementsTree = _get(TransparentHighjacker.prototype.__proto__ || Object.getPrototypeOf(TransparentHighjacker.prototype), 'render', this).call(this);
+        if (!innerElementsTree) return null;
+
+        var newChildren = (0, _enhanceReactChildren2.default)(innerElementsTree.props.children, callback, componentsToWatch);
+        var newElementsTree = _react2.default.cloneElement(innerElementsTree, innerElementsTree.props, newChildren);
+
+        return newElementsTree;
+      }
+    }]);
+
+    return TransparentHighjacker;
+  }(ComposedComponent);
+
+  TransparentHighjacker.displayName = (0, _utils.getDisplayName)(InnerComponent);
+
+  return TransparentHighjacker;
+};
+
+exports.default = transparentHighjacker;
+
+},{"./enhanceReactChildren":189,"./utils/utils":194,"prop-types":35,"react":188}],194:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21592,7 +21692,7 @@ var isStateless = exports.isStateless = function isStateless(component) {
   return !component.render && !(component.prototype && component.prototype.render);
 };
 
-},{}],194:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

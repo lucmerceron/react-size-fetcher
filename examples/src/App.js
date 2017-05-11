@@ -5,7 +5,7 @@ import SizeFetcher from '../../src/index'
 import ComponentToObserve from './ComponentToObserve'
 import SimpleComponent from './SimpleComponent'
 
-const EnhancedComponent = SizeFetcher(ComponentToObserve)
+const EnhancedComponent = SizeFetcher(ComponentToObserve, { watchSubComponents: ['SimpleComponent', 'InsideComponent'] })
 
 class App extends React.Component {
   constructor() {
