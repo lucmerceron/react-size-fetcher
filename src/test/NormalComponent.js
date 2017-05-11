@@ -29,6 +29,7 @@ class NormalComponent extends React.Component {
 
     lifeCycleCallback('willUnmount')
   }
+
   render() {
     const { content } = this.props
 

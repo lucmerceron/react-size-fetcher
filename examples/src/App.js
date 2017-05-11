@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import SizeFetcher from '../../src/index'
 import ComponentToObserve from './ComponentToObserve'
@@ -13,7 +12,7 @@ class App extends React.Component {
 
     this.state = {
       subComponentSize: null,
-      childrenNumber: [Math.random() + ''],
+      childrenNumber: [`${Math.random()}`],
     }
   }
   render() {
@@ -23,11 +22,13 @@ class App extends React.Component {
       <div className="composed-normal-component" style={{ fontSize: '14px' }}>
         <h1>Observed component {JSON.stringify(subComponentSize, null, 2)}</h1>
         <div style={{ border: '1px solid red' }}>
-          <button onClick={() => {
-            const childrenCopy = [...childrenNumber]
-            childrenCopy.push(Math.random() + '')
-            this.setState({ childrenNumber: childrenCopy })}
-          }>
+          <button
+            onClick={() => {
+              const childrenCopy = [...childrenNumber]
+              childrenCopy.push(`${Math.random()}`)
+              this.setState({ childrenNumber: childrenCopy })
+            }}
+          >
             Add N
           </button>
           <div>

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+/* eslint-disable react/prefer-stateless-function */
 class ComponentToObserve extends React.Component {
   render() {
     return (
@@ -10,6 +11,7 @@ class ComponentToObserve extends React.Component {
     )
   }
 }
+/* eslint-enable react/prefer-stateless-function */
 
 ComponentToObserve.propTypes = {
   children: PropTypes.node.isRequired,

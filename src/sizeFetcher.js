@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import enhanceReactChildren from './enhanceReactChildren'
 import warning from './utils/warning'
 
-import { getDisplayName, isStateless } from './utils/utils'
+import { getDisplayName, isStateless } from './utils/utils'
 
 /*
 * Size Inversion Inheritence Higher Order Component

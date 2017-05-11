@@ -24,7 +24,8 @@
     "global-require": 0,
     "semi": [1, "never"],
     "max-len": ["error", 140],
-    "jsx-a11y/no-static-element-interactions": 0
+    "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/img-has-alt": "off"
   },
   "plugins": [
     "jest",

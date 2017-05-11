@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import enhanceReactChildren from './enhanceReactChildren'
 
-import { getDisplayName, isStateless } from './utils/utils'
+import { getDisplayName, isStateless } from './utils/utils'
 
 const proxyHighjacker = (InnerComponent, callback, componentsToWatch) => {
   // const ComposedComponent = NormalizeComponent(InnerComponent)
@@ -21,8 +21,8 @@ const proxyHighjacker = (InnerComponent, callback, componentsToWatch) => {
   }
 
   class ProxyHighjacker extends ComposedComponent {
-    componentDidUpdate() {
-      if (super.componentDidUpdate) super.componentDidUpdate(...arguments)
+    componentDidUpdate(...args) {
+      if (super.componentDidUpdate) super.componentDidUpdate(...args)
       this.props.sizeMayChange()
     }
     render() {

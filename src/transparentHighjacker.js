@@ -1,9 +1,8 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import enhanceReactChildren from './enhanceReactChildren'
 
-import { getDisplayName, isStateless } from './utils/utils'
+import { getDisplayName, isStateless } from './utils/utils'
 
 const transparentHighjacker = (InnerComponent, callback, componentsToWatch) => {
   // const ComposedComponent = NormalizeComponent(InnerComponent)
@@ -20,7 +19,6 @@ const transparentHighjacker = (InnerComponent, callback, componentsToWatch) => {
     ComposedComponent.displayName = getDisplayName(component)
   }
 
-  
   class TransparentHighjacker extends ComposedComponent {
     render() {
       // Here we need to apply the same principle as SizeFetcher and enhance the inner component

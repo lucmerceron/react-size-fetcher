@@ -11,10 +11,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = require('prop-types');
-
-var _propTypes2 = _interopRequireDefault(_propTypes);
-
 var _index = require('../../src/index');
 
 var _index2 = _interopRequireDefault(_index);
@@ -49,7 +45,7 @@ var App = function (_React$Component) {
 
     _this.state = {
       subComponentSize: null,
-      childrenNumber: [Math.random() + '']
+      childrenNumber: ['' + Math.random()]
     };
     return _this;
   }
@@ -78,11 +74,13 @@ var App = function (_React$Component) {
           { style: { border: '1px solid red' } },
           _react2.default.createElement(
             'button',
-            { onClick: function onClick() {
+            {
+              onClick: function onClick() {
                 var childrenCopy = [].concat(_toConsumableArray(childrenNumber));
-                childrenCopy.push(Math.random() + '');
+                childrenCopy.push('' + Math.random());
                 _this2.setState({ childrenNumber: childrenCopy });
-              } },
+              }
+            },
             'Add N'
           ),
           _react2.default.createElement(
@@ -108,7 +106,7 @@ var App = function (_React$Component) {
 
 exports.default = App;
 
-},{"../../src/index":190,"./ComponentToObserve":2,"./SimpleComponent":4,"prop-types":35,"react":188}],2:[function(require,module,exports){
+},{"../../src/index":190,"./ComponentToObserve":2,"./SimpleComponent":4,"react":188}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -133,6 +131,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/* eslint-disable react/prefer-stateless-function */
 var ComponentToObserve = function (_React$Component) {
   _inherits(ComponentToObserve, _React$Component);
 
@@ -155,6 +154,7 @@ var ComponentToObserve = function (_React$Component) {
 
   return ComponentToObserve;
 }(_react2.default.Component);
+/* eslint-enable react/prefer-stateless-function */
 
 ComponentToObserve.propTypes = {
   children: _propTypes2.default.node.isRequired
@@ -175,10 +175,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = require('prop-types');
-
-var _propTypes2 = _interopRequireDefault(_propTypes);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -198,7 +194,7 @@ var InsideComponent = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (InsideComponent.__proto__ || Object.getPrototypeOf(InsideComponent)).call(this));
 
     _this.state = {
-      childrenNumber: [Math.random() + '']
+      childrenNumber: ['' + Math.random()]
     };
     return _this;
   }
@@ -216,11 +212,13 @@ var InsideComponent = function (_React$Component) {
         { className: 'inside-component', style: { marginLeft: '40px' } },
         _react2.default.createElement(
           'button',
-          { onClick: function onClick() {
+          {
+            onClick: function onClick() {
               var childrenCopy = [].concat(_toConsumableArray(childrenNumber));
-              childrenCopy.push(Math.random() + '');
+              childrenCopy.push('' + Math.random());
               _this2.setState({ childrenNumber: childrenCopy });
-            } },
+            }
+          },
           'Add N-2'
         ),
         _react2.default.createElement(
@@ -245,7 +243,7 @@ InsideComponent.propTypes = {};
 
 exports.default = InsideComponent;
 
-},{"prop-types":35,"react":188}],4:[function(require,module,exports){
+},{"react":188}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -257,10 +255,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
-
-var _propTypes = require('prop-types');
-
-var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _InsideComponent = require('./InsideComponent');
 
@@ -285,7 +279,7 @@ var SimpleComponent = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (SimpleComponent.__proto__ || Object.getPrototypeOf(SimpleComponent)).call(this));
 
     _this.state = {
-      childrenNumber: [Math.random() + '']
+      childrenNumber: ['' + Math.random()]
     };
     return _this;
   }
@@ -303,11 +297,13 @@ var SimpleComponent = function (_React$Component) {
         { className: 'simple-component', style: { marginLeft: '20px' } },
         _react2.default.createElement(
           'button',
-          { onClick: function onClick() {
+          {
+            onClick: function onClick() {
               var childrenCopy = [].concat(_toConsumableArray(childrenNumber));
-              childrenCopy.push(Math.random() + '');
+              childrenCopy.push('' + Math.random());
               _this2.setState({ childrenNumber: childrenCopy });
-            } },
+            }
+          },
           'Add N-1'
         ),
         _react2.default.createElement(
@@ -326,7 +322,7 @@ var SimpleComponent = function (_React$Component) {
 
 exports.default = SimpleComponent;
 
-},{"./InsideComponent":3,"prop-types":35,"react":188}],5:[function(require,module,exports){
+},{"./InsideComponent":3,"react":188}],5:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -21228,42 +21224,7 @@ var _utils = require('./utils/utils');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var registeredType = {};
-
-/*
-* Enhance the child with the prop sizeMayChange
-* A react Element can be of two types:
-*  1. function (FTRE): Components created by the user
-*  2. string (STRE): DOM nodes
-*/
-var enhanceReactElement = function enhanceReactElement(child, callback, componentsToWatch) {
-  if (child && typeof child.type === 'function') {
-    // One way to identify surely, without assumption on the name, a function
-    var funcSignature = (componentsToWatch.indexOf((0, _utils.getDisplayName)(child.type)) > -1 ? 'observed' : 'transparent') + '-' + child.type.toString();
-
-    // We register the innerEnhancer so it won't remount sub element when update
-    if (!registeredType[funcSignature]) {
-      if (componentsToWatch.indexOf((0, _utils.getDisplayName)(child.type)) > -1) {
-        registeredType[funcSignature] = (0, _proxyHighjacker2.default)(child.type, callback, componentsToWatch);
-      } else {
-        registeredType[funcSignature] = (0, _transparentHighjacker2.default)(child.type, callback, componentsToWatch);
-      }
-    }
-    var EnhancedInner = registeredType[funcSignature];
-
-    // Add the callback function to the props of the component
-    var newProps = Object.assign({}, child.props, componentsToWatch.indexOf((0, _utils.getDisplayName)(child.type)) > -1 ? { sizeMayChange: callback } : {});
-    // Children of the innerElement are managed by the enhancer
-    var EnhancerInnerElement = _react2.default.createElement(EnhancedInner, newProps);
-
-    return EnhancerInnerElement;
-  }
-  // Return the child with its children enhanced
-  return Object.assign({}, child, {
-    props: Object.assign({}, child.props, {
-      children: enhanceReactChildren(child.props ? child.props.children : null, callback, componentsToWatch)
-    })
-  });
-};
+var enhanceReactElement = void 0;
 
 /*
 * Apply enhanceReactElement to each child of children
@@ -21275,9 +21236,47 @@ var enhanceReactChildren = function enhanceReactChildren(children, callback, com
     });
   } else if (children instanceof Object) {
     return enhanceReactElement(children, callback, componentsToWatch);
-  } else {
-    return children;
   }
+  return children;
+};
+
+/*
+* Enhance the child with the prop sizeMayChange
+* A react Element can be of two types:
+*  1. function (FTRE): Components created by the user
+*  2. string (STRE): DOM nodes
+*/
+enhanceReactElement = function enhanceReactElement(child, callback, componentsToWatch) {
+  // The element is in the list to observe
+  var toObserve = componentsToWatch.indexOf((0, _utils.getDisplayName)(child.type)) > -1;
+
+  if (child && typeof child.type === 'function') {
+    // One way to identify surely, without assumption on the name, a function
+    var funcSignature = (toObserve ? 'observed' : 'transparent') + '-' + child.type.toString();
+
+    // We register the innerEnhancer so it won't remount sub element when update
+    if (!registeredType[funcSignature]) {
+      if (toObserve) {
+        registeredType[funcSignature] = (0, _proxyHighjacker2.default)(child.type, callback, componentsToWatch);
+      } else {
+        registeredType[funcSignature] = (0, _transparentHighjacker2.default)(child.type, callback, componentsToWatch);
+      }
+    }
+    var EnhancedInner = registeredType[funcSignature];
+
+    // Add the callback function to the props of the component
+    var newProps = Object.assign({}, child.props, toObserve ? { sizeMayChange: callback } : {});
+    // Children of the innerElement are managed by the enhancer
+    var EnhancerInnerElement = _react2.default.createElement(EnhancedInner, newProps);
+
+    return EnhancerInnerElement;
+  }
+  // Return the child with its children enhanced
+  return Object.assign({}, child, {
+    props: Object.assign({}, child.props, {
+      children: enhanceReactChildren(child.props ? child.props.children : null, callback, componentsToWatch)
+    })
+  });
 };
 
 exports.default = enhanceReactChildren;
@@ -21370,7 +21369,13 @@ var proxyHighjacker = function proxyHighjacker(InnerComponent, callback, compone
     _createClass(ProxyHighjacker, [{
       key: 'componentDidUpdate',
       value: function componentDidUpdate() {
-        if (_get(ProxyHighjacker.prototype.__proto__ || Object.getPrototypeOf(ProxyHighjacker.prototype), 'componentDidUpdate', this)) _get(ProxyHighjacker.prototype.__proto__ || Object.getPrototypeOf(ProxyHighjacker.prototype), 'componentDidUpdate', this).apply(this, arguments);
+        var _get2;
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        if (_get(ProxyHighjacker.prototype.__proto__ || Object.getPrototypeOf(ProxyHighjacker.prototype), 'componentDidUpdate', this)) (_get2 = _get(ProxyHighjacker.prototype.__proto__ || Object.getPrototypeOf(ProxyHighjacker.prototype), 'componentDidUpdate', this)).call.apply(_get2, [this].concat(args));
         this.props.sizeMayChange();
       }
     }, {
@@ -21600,10 +21605,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = require('prop-types');
-
-var _propTypes2 = _interopRequireDefault(_propTypes);
-
 var _enhanceReactChildren = require('./enhanceReactChildren');
 
 var _enhanceReactChildren2 = _interopRequireDefault(_enhanceReactChildren);
@@ -21679,7 +21680,7 @@ var transparentHighjacker = function transparentHighjacker(InnerComponent, callb
 
 exports.default = transparentHighjacker;
 
-},{"./enhanceReactChildren":189,"./utils/utils":194,"prop-types":35,"react":188}],194:[function(require,module,exports){
+},{"./enhanceReactChildren":189,"./utils/utils":194,"react":188}],194:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21701,11 +21702,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = warning;
 function warning(message) {
   /* istanbul ignore next */
-  /* eslint-disable no-console */
   if (typeof console !== 'undefined' && typeof console.error === 'function') {
     console.error(message);
   }
-  /* eslint-enable no-console */
   try {
     throw new Error(message);
     /* eslint-disable no-empty */

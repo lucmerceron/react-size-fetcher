@@ -5,23 +5,27 @@ class DynamicComponent extends React.Component {
   constructor() {
     super()
 
+    this.updateState = this.updateState.bind(this)
     this.state = {
-      dynamicState: "Default",
+      dynamicState: 'Default',
     }
+  }
+  componentDidMount() {
+    const { lifeCycleCallback } = this.props
+
+    lifeCycleCallback('didMount')
+    this.updateState()
   }
   componentDidUpdate() {
     const { lifeCycleCallback } = this.props
 
     lifeCycleCallback('didUpdate')
   }
-  componentDidMount() {
-    const { lifeCycleCallback } = this.props
 
-    lifeCycleCallback('didMount')
-    this.setState({
-      dynamicState: "Dynamic",
-    })
+  updateState() {
+    this.setState({ dynamicState: 'Dynamic' })
   }
+
   render() {
     const { dynamicState } = this.state
     const { content } = this.props
