@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import EnhanceReactChildren from './EnhanceReactChildren'
+import enhanceReactChildren from './enhanceReactChildren'
 import warning from './utils/warning'
 
 import { getDisplayName, isStateless } from './utils/utils'
@@ -11,7 +11,9 @@ import { getDisplayName, isStateless } from './utils/utils'
 * This component is usefull when you need a transparant way for knowing the size of a sub component
 * It will call the sizeChange function when the size of the sub component is first known and then everytime it changes
 */
-const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: false }) => {
+const sizeFetcher = (SubComponent, options = {}) => {
+  const newOptions = Object.assign({ noComparison: false, watchSubComponents: [] }, options)
+
   // const ComposedComponent = NormalizeComponent(SubComponent)
   const component = SubComponent
   let ComposedComponent = component
@@ -19,7 +21,7 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
   // Managing component without state (functional component)
   if (isStateless(ComposedComponent)) {
     if (typeof component !== 'function') {
-      warning('SizeFetcher has been called with neither a React Functional or Class Component')
+      warning('sizeFetcher has been called with neither a React Functional or Class Component')
       return () => null
     }
     ComposedComponent = class extends React.Component {
@@ -30,7 +32,7 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
     ComposedComponent.displayName = getDisplayName(component)
   }
 
-  class Enhancer extends ComposedComponent {
+  class SizeFetcher extends ComposedComponent {
     componentDidMount() {
       if (super.componentDidMount) super.componentDidMount()
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
@@ -62,7 +64,7 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
       if (!this.comp) return
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
 
-      if (options.noComparison ||
+      if (newOptions.noComparison ||
         (clientWidth !== this.clientWidth || clientHeight !== this.clientHeight ||
         scrollHeight !== this.scrollHeight || scrollWidth !== this.scrollWidth)) {
         this.privateSizeChanged(clientHeight, clientWidth, scrollHeight, scrollWidth)
@@ -79,9 +81,11 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
     render() {
       const elementsTree = super.render()
 
-      const newChildren = options.shallow
-        ? elementsTree.props.children
-        : EnhanceReactChildren(elementsTree.props.children, this.privateHandleSizeMayHaveChanged.bind(this))
+      const newChildren = newOptions.watchSubComponents.length > 0
+        ? enhanceReactChildren(elementsTree.props.children,
+            this.privateHandleSizeMayHaveChanged.bind(this),
+            newOptions.watchSubComponents)
+        : elementsTree.props.children
       // Here thanks to II, we can add a ref without the subComponent noticing
       const newProps = Object.assign({}, elementsTree.props, { ref: comp => (this.comp = comp) })
       // Create a new component from SubComponent render with new props
@@ -90,12 +94,12 @@ const SizeFetcher = (SubComponent, options = { noComparison: false, shallow: fal
       return newElementsTree
     }
   }
-  Enhancer.displayName = `SizeFetcher(${getDisplayName(SubComponent)})`
-  Enhancer.propTypes = {
+  SizeFetcher.displayName = `SizeFetcher(${getDisplayName(SubComponent)})`
+  SizeFetcher.propTypes = {
     sizeChange: PropTypes.func.isRequired,
   }
 
-  return Enhancer
+  return SizeFetcher
 }
 
-export default SizeFetcher
+export default sizeFetcher

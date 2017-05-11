@@ -108,10 +108,11 @@ describe('Index', () => {
     })
   })
   describe('SizeFetcher on Composed Components', () => {
-    const EnhancedComposedNormalComponent = SizeFetcher(ComposedNormalComponent, { noComparison: true })
-    const EnhancedComposedFunctionalComponent = SizeFetcher(ComposedFunctionalComponent)
-    const EnhancedComposedDynamicComponent = SizeFetcher(ComposedDynamicComponent, { noComparison: true })
-    const EnhancedComposedDynamicShallowComponent = SizeFetcher(ComposedDynamicComponent, { noComparison: true, shallow: true })
+    const EnhancedComposedNormalComponent = SizeFetcher(ComposedNormalComponent, { noComparison: true, watchSubComponents: ['NormalComponent'] })
+    const EnhancedComposedFunctionalComponent = SizeFetcher(ComposedFunctionalComponent, { watchSubComponents: ['FunctionalComponent'] })
+    const EnhancedComposedDynamicComponent = SizeFetcher(ComposedDynamicComponent, { noComparison: true, watchSubComponents: ['DynamicComponent'] })
+    const EnhancedComposedDynamicShallowComponent = SizeFetcher(ComposedDynamicComponent, { noComparison: true, watchSubComponents: ['RandomComponent'] })
+    const EnhancedComposedFunctionalShallowComponent = SizeFetcher(ComposedFunctionalComponent, { watchSubComponents: ['RandomComponent'] })
 
     const composedNormalComponentProps = {
       sizeChange: jest.fn(),
@@ -136,11 +137,17 @@ describe('Index', () => {
       content: "ComposedNormal",
       subContent: "Normal",
     }
+    const composedFunctionalShallowComponentProps = {
+      sizeChange: jest.fn(),
+      content: "ComposedFunctional",
+      subContent: "Functional",
+    }
 
     const WrapperEnhancedComposedNormalComponent = mount(<EnhancedComposedNormalComponent {...composedNormalComponentProps} />)
     const WrapperEnhancedComposedFunctionalComponent = mount(<EnhancedComposedFunctionalComponent {...composedFunctionalComponentProps} />)
     const WrapperEnhancedComposedDynamicComponent = mount(<EnhancedComposedDynamicComponent {...composedDynamicComponentProps} />)
     const WrapperEnhancedComposedShallowDynamicComponent = mount(<EnhancedComposedDynamicShallowComponent {...composedDynamicShallowComponentProps} />)
+    const WrapperEnhancedComposedFunctionalShallowComponent = mount(<EnhancedComposedFunctionalShallowComponent {...composedFunctionalShallowComponentProps} />)
 
     it('should render composed components correctly', () => {
       expect(WrapperEnhancedComposedNormalComponent.find('.composed-normal-component').node).toBeDefined()
@@ -153,28 +160,28 @@ describe('Index', () => {
     it('should correctly give props to composed and simple components', () => {
       expect(WrapperEnhancedComposedNormalComponent.props()).toEqual(composedNormalComponentProps)
       expect(WrapperEnhancedComposedFunctionalComponent.props()).toEqual(composedFunctionalComponentProps)
-      expect(WrapperEnhancedComposedNormalComponent.find('EnhancerInnerComponent').props().content).toEqual(composedNormalComponentProps.subContent)
-      expect(WrapperEnhancedComposedFunctionalComponent.find('EnhancerInnerComponent').props().content).toEqual(composedFunctionalComponentProps.subContent)
+      expect(WrapperEnhancedComposedNormalComponent.find('ProxyHighjacker').props().content).toEqual(composedNormalComponentProps.subContent)
+      expect(WrapperEnhancedComposedFunctionalComponent.find('ProxyHighjacker').props().content).toEqual(composedFunctionalComponentProps.subContent)
     })
     it('should render the SizeFetcher name around the sub-component\'s one', () => {
       expect(WrapperEnhancedComposedNormalComponent.name()).toEqual(`SizeFetcher(${ComposedNormalComponent.name})`)
       expect(WrapperEnhancedComposedFunctionalComponent.name()).toEqual(`SizeFetcher(${ComposedFunctionalComponent.name})`)
     })
-    it('should render the EnhancerInner name around the sub-component\'s one', () => {
-      expect(WrapperEnhancedComposedNormalComponent.find('EnhancerInnerComponent').name())
-        .toEqual(`EnhancerInner(${NormalComponent.name})`)
-      expect(WrapperEnhancedComposedFunctionalComponent.find('EnhancerInnerComponent').name())
-        .toEqual(`EnhancerInner(${FunctionalComponent.name})`)
+    it('should render the ProxyHighjacker name around the sub-component\'s one', () => {
+      expect(WrapperEnhancedComposedNormalComponent.find('ProxyHighjacker').name())
+        .toEqual(`SizeFetcherInner(${NormalComponent.name})`)
+      expect(WrapperEnhancedComposedFunctionalComponent.find('ProxyHighjacker').name())
+        .toEqual(`SizeFetcherInner(${FunctionalComponent.name})`)
     })
     it('should give sizeMayChange props to simple component', () => {
-      expect(WrapperEnhancedComposedNormalComponent.find('EnhancerInnerComponent').props().sizeMayChange).toBeDefined()
-      expect(WrapperEnhancedComposedFunctionalComponent.find('EnhancerInnerComponent').props().sizeMayChange).toBeDefined()
+      expect(WrapperEnhancedComposedNormalComponent.find('ProxyHighjacker').props().sizeMayChange).toBeDefined()
+      expect(WrapperEnhancedComposedFunctionalComponent.find('ProxyHighjacker').props().sizeMayChange).toBeDefined()
     })
     it('should call sizeChange on sizeMayChange call if size changed or no comparison actived', () => {
       expect(composedNormalComponentProps.sizeChange.mock.calls.length).toEqual(3)
       expect(composedFunctionalComponentProps.sizeChange.mock.calls.length).toEqual(1)
-      WrapperEnhancedComposedNormalComponent.find('EnhancerInnerComponent').props().sizeMayChange()
-      WrapperEnhancedComposedFunctionalComponent.find('EnhancerInnerComponent').props().sizeMayChange()
+      WrapperEnhancedComposedNormalComponent.find('ProxyHighjacker').props().sizeMayChange()
+      WrapperEnhancedComposedFunctionalComponent.find('ProxyHighjacker').props().sizeMayChange()
       expect(composedNormalComponentProps.sizeChange.mock.calls.length).toEqual(4)
       expect(composedFunctionalComponentProps.sizeChange.mock.calls.length).toEqual(1)
     })
@@ -182,9 +189,12 @@ describe('Index', () => {
       expect(composedDynamicComponentProps.sizeChange.mock.calls.length).toEqual(4)
       expect(WrapperEnhancedComposedDynamicComponent.html()).toContain("Dynamic")
     })
-    it('should not call sizeChange when dynamic sub-component changes by itself on shallowed component', () => {
+    it('should not call sizeChange when dynamic sub-component changes by itself on no watched sub-component', () => {
       expect(composedDynamicShallowComponentProps.sizeChange.mock.calls.length).toEqual(3)
       expect(WrapperEnhancedComposedShallowDynamicComponent.html()).toContain("Dynamic")
+    })
+    it('should not call sizeChange when functional sub-component is not watched', () => {
+      expect(composedFunctionalShallowComponentProps.sizeChange.mock.calls.length).toEqual(1)
     })
     it('should not remount sub element state when SizeFetcher component update', () => {
       WrapperEnhancedComposedDynamicComponent.setProps({ content: 'New ComposedNormal'})

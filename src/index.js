@@ -1,3 +1,3 @@
-import SizeFetcher from './SizeFetcher'
+import sizeFetcher from './sizeFetcher'
 
-export default SizeFetcher
+export default sizeFetcher
