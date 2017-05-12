@@ -78,7 +78,7 @@ class ComponentToObserve extends React.Component {
   ...
 ```
 
-Some advanced examples can be find in the [examples](https://github.com/wing-eu/react-size-fetcher/tree/master/examples) folder of this repository.
+Some advanced examples can be find in the [docs](https://github.com/wing-eu/react-size-fetcher/tree/master/docs) folder of this repository. [Live example](https://wing-eu.github.io/react-size-fetcher/) also works.
 
 ## Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
