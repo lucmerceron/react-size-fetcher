@@ -33,7 +33,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var EnhancedComponent = (0, _index2.default)(_ComponentToObserve2.default, { watchSubComponents: ['SimpleComponent', 'InsideComponent'] });
+var EnhancedComponent = (0, _index2.default)(_ComponentToObserve2.default, { watchSubComponents: ['InsideComponent'] });
 
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
@@ -71,7 +71,7 @@ var App = function (_React$Component) {
         ),
         _react2.default.createElement(
           'div',
-          { style: { border: '1px solid red' } },
+          { style: { border: '1px solid red', display: 'inline-block' } },
           _react2.default.createElement(
             'button',
             {
@@ -81,7 +81,7 @@ var App = function (_React$Component) {
                 _this2.setState({ childrenNumber: childrenCopy });
               }
             },
-            'Add N'
+            'Add N-1'
           ),
           _react2.default.createElement(
             'div',
@@ -169,6 +169,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -176,8 +178,6 @@ var _react = require('react');
 var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -193,44 +193,40 @@ var InsideComponent = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (InsideComponent.__proto__ || Object.getPrototypeOf(InsideComponent)).call(this));
 
+    _this.interval = null;
     _this.state = {
-      childrenNumber: ['' + Math.random()]
+      styles: { width: 200, height: 200 }
     };
     return _this;
   }
 
   _createClass(InsideComponent, [{
-    key: 'render',
-    value: function render() {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
       var _this2 = this;
 
-      var childrenNumber = this.state.childrenNumber;
+      var giveRandomSize = function giveRandomSize() {
+        return Math.trunc(Math.random() * 50, 10) + 60;
+      };
+
+      if (this.interval) clearInterval(this.interval);
+      this.interval = setInterval(function () {
+        _this2.setState({ styles: { width: giveRandomSize(), height: giveRandomSize() } });
+      }, 3500);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var styles = this.state.styles;
 
 
       return _react2.default.createElement(
         'div',
-        { className: 'inside-component', style: { marginLeft: '40px' } },
-        _react2.default.createElement(
-          'button',
-          {
-            onClick: function onClick() {
-              var childrenCopy = [].concat(_toConsumableArray(childrenNumber));
-              childrenCopy.push('' + Math.random());
-              _this2.setState({ childrenNumber: childrenCopy });
-            }
-          },
-          'Add N-2'
-        ),
+        { className: 'inside-component', style: _extends({ marginLeft: '40px', border: '1px solid blue' }, styles) },
         _react2.default.createElement(
           'div',
           null,
-          childrenNumber.map(function (child) {
-            return _react2.default.createElement(
-              'div',
-              { key: child },
-              child
-            );
-          })
+          'N-2 Component'
         )
       );
     }
@@ -238,8 +234,6 @@ var InsideComponent = function (_React$Component) {
 
   return InsideComponent;
 }(_react2.default.Component);
-
-InsideComponent.propTypes = {};
 
 exports.default = InsideComponent;
 
@@ -294,7 +288,7 @@ var SimpleComponent = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        { className: 'simple-component', style: { marginLeft: '20px' } },
+        { className: 'simple-component', style: { marginLeft: '20px', border: '1px solid grey' } },
         _react2.default.createElement(
           'button',
           {
@@ -304,7 +298,7 @@ var SimpleComponent = function (_React$Component) {
               _this2.setState({ childrenNumber: childrenCopy });
             }
           },
-          'Add N-1'
+          'Add N-2'
         ),
         _react2.default.createElement(
           'div',

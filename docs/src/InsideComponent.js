@@ -4,31 +4,30 @@ class InsideComponent extends React.Component {
   constructor() {
     super()
 
+    this.interval = null
     this.state = {
-      childrenNumber: [`${Math.random()}`],
+      styles: { width: 200, height: 200 },
     }
   }
+  componentDidMount() {
+    const giveRandomSize = () => Math.trunc(Math.random() * 50, 10) + 60
+
+    if (this.interval) clearInterval(this.interval)
+    this.interval = setInterval(() => {
+      this.setState({ styles: { width: giveRandomSize(), height: giveRandomSize() } })
+    }, 3500)
+  }
   render() {
-    const { childrenNumber } = this.state
+    const { styles } = this.state
 
     return (
-      <div className="inside-component" style={{ marginLeft: '40px' }}>
-        <button
-          onClick={() => {
-            const childrenCopy = [...childrenNumber]
-            childrenCopy.push(`${Math.random()}`)
-            this.setState({ childrenNumber: childrenCopy })
-          }}
-        >Add N-2</button>
+      <div className="inside-component" style={{ marginLeft: '40px', border: '1px solid blue', ...styles }}>
         <div>
-          {childrenNumber.map(child => <div key={child}>{child}</div>)}
+          N-2 Component
         </div>
       </div>
     )
   }
-}
-
-InsideComponent.propTypes = {
 }
 
 export default InsideComponent

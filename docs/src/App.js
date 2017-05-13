@@ -4,7 +4,7 @@ import SizeFetcher from '../../src/index'
 import ComponentToObserve from './ComponentToObserve'
 import SimpleComponent from './SimpleComponent'
 
-const EnhancedComponent = SizeFetcher(ComponentToObserve, { watchSubComponents: ['SimpleComponent', 'InsideComponent'] })
+const EnhancedComponent = SizeFetcher(ComponentToObserve, { watchSubComponents: ['InsideComponent'] })
 
 class App extends React.Component {
   constructor() {
@@ -21,7 +21,7 @@ class App extends React.Component {
     return (
       <div className="composed-normal-component" style={{ fontSize: '14px' }}>
         <h1>Observed component {JSON.stringify(subComponentSize, null, 2)}</h1>
-        <div style={{ border: '1px solid red' }}>
+        <div style={{ border: '1px solid red', display: 'inline-block' }}>
           <button
             onClick={() => {
               const childrenCopy = [...childrenNumber]
@@ -29,7 +29,7 @@ class App extends React.Component {
               this.setState({ childrenNumber: childrenCopy })
             }}
           >
-            Add N
+            Add N-1
           </button>
           <div>
             <EnhancedComponent sizeChange={size => this.setState({ subComponentSize: size })}>

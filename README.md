@@ -33,7 +33,7 @@ sizeChange is a function with one argument, it will be called with an `Object` r
   * [noComparison] (Boolean): Default value: false. This option allow you to bypass SizeFetcher optimization. SizeFetcher usually compare all the size and do not call `sizeChange` if the size did not change between two updates.
   `const EnhancedComponent = SizeFetcher(ComponentToObserve, { noComparison: true})`
   * [watchSubComponents] (Array): Default value: []. This option allow you to indicate if you want to watch specific sub-components. When defined, SizeFetcher will go through the render method of each sub component of the ComponentToObserve and add a proxy that will call `sizeChange` function when they update.
-  `const EnhancedComponent = SizeFetcher(ComponentToObserve, { watchSubComponents: ['Input', 'Button'] })`
+  `const EnhancedComponent = SizeFetcher(ComponentToObserve, { watchSubComponents: ['AccordionComponent', 'ListComponent'] })`
 ### Returns
 A Higher-Order React Component that inherit from your initial component and take one more props named `sizeChange`. sizeChange is suceptible to be called when the component receives new props, updates its state or when the window resize.
 
@@ -79,6 +79,30 @@ class ComponentToObserve extends React.Component {
 ```
 
 Some advanced examples can be find in the [docs](https://github.com/wing-eu/react-size-fetcher/tree/master/docs) folder of this repository. [Live example](https://wing-eu.github.io/react-size-fetcher/) also works.
+
+## How does it work ?
+
+SizeFetcher is what we call an inverse inheritance higher order function. It takes a component as parameters and return a component; which by inheriting from the ComponentToObserve, will be able to highjack the render of ComponentToObserve and add functions to its [lifecycle](https://facebook.github.io/react/docs/react-component.html#the-component-lifecycle).
+
+### Highjacking the render
+The render highjack is usefull for SizeFetcher in two ways:
+1. To add a [ref]((https://facebook.github.io/react/docs/refs-and-the-dom.html)) to the componentToObserve output to retrieve and store its `DOM element`.
+2. To enhance the rendered children if the `watchSubComponents` list option is not empty.
+
+### Enhancing the lifecycle
+SizeFetcher will modify three basic functions of ComponentToObserve's lifecycle:
+1. componentDidMount: Add an event listener on the window resize.
+2. componentWillUnmount: Remove the event listener on the window resize.
+3. componentDidUpdate: Call the SizeFetcher returned component's private `handleSizeMayHaveChanged` function.
+
+The window resize listener will also call `handleSizeMayHaveChanged` function on resize.
+
+### handleSizeMayHaveChanged
+This function calls the given ComponentToObserve's `sizeChange` prop if the size of the DOM element (retrieved earlier at highjacking step 1.) did change compared to the last call values. The option `noComparison` will bypass the comparison and call `sizeChange` at every `handleSizeMayHaveChange` call.
+
+### Enhancing sub-components
+This is were the magic happens. SizeFetcher will go through every sub component and look up for components' name that are in the `watchSubComponents` list and add to them a props called `sizeMayChange`. This props will be called everytime the sub-component updates. When this props is called, it will call the SizeFetcher returned component's private `handleSizeMayHaveChanged` function and trigger the sizeChange if pertinent.
+ 
 
 ## Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).

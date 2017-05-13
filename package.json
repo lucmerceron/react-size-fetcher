@@ -4,8 +4,8 @@
   "description": "Transparently retrieve a component size",
   "main": "dist/index.js",
   "scripts": {
-    "start": "watchify examples/src/index.js -o examples/build/bundle.js -t babelify",
-    "lint": "eslint ./src ./examples/src",
+    "start": "watchify docs/src/index.js -o docs/build/bundle.js -t babelify",
+    "lint": "eslint ./src ./docs/src",
     "commit": "git-cz",
     "check-coverage": "istanbul check-coverage --statements 90 --branches 90 --functions 90 --lines 90",
     "report-coverage": "cat ./coverage/lcov.info | codecov",
@@ -13,7 +13,8 @@
     "test:watch": "jest --watch",
     "build": "babel --out-dir dist --ignore *.test.js,./src/test/* src",
     "prebuild": "rimraf dist",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release:pre": "semantic-release pre"
   },
   "jest": {
     "transform": {

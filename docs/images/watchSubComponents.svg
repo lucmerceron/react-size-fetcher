@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="199.97461mm"
+   height="152.44031mm"
+   viewBox="0 0 708.57145 540.14282"
+   id="svg4156"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="watchSubComponents.svg">
+  <defs
+     id="defs4158" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="279.48018"
+     inkscape:cy="282.7515"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1053"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4161">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-3.5714309,-110.36221)"
+     style="display:inline">
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#2196f3;stroke-width:2.00998545;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4704"
+       width="227.99002"
+       height="139.99002"
+       x="243.50542"
+       y="111.3672" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:39.20584106px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="256.51453"
+       y="182.77129"
+       id="text5243"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98014597,1.0202562)"><tspan
+         sodipodi:role="line"
+         x="256.51453"
+         y="182.77129"
+         id="tspan5245"><tspan
+           x="256.51453"
+           y="182.77129"
+           style="font-size:19.60292053px;line-height:135.00000238%"
+           id="tspan5247">ComponentToObserve</tspan></tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#192730;stroke-width:2.00998545;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4704-3"
+       width="227.99002"
+       height="139.99002"
+       x="363.14786"
+       y="309.51004" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:39.20584106px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="386.02789"
+       y="376.98019"
+       id="text5237"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98014601,1.0202562)"><tspan
+         sodipodi:role="line"
+         x="386.02789"
+         y="376.98019"
+         id="tspan5239"><tspan
+           x="386.02789"
+           y="376.98019"
+           style="font-size:19.60292053px;line-height:135.00000238%"
+           id="tspan5241">RandSubComponent</tspan></tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#192730;stroke-width:2.00998545;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4704-2"
+       width="227.99002"
+       height="139.99002"
+       x="123.14786"
+       y="309.51004" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:39.20584106px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="141.16643"
+       y="376.98019"
+       id="text5249"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98014601,1.0202562)"><tspan
+         sodipodi:role="line"
+         x="141.16643"
+         y="376.98019"
+         id="tspan5251"><tspan
+           x="141.16643"
+           y="376.98019"
+           style="font-size:19.60292053px;line-height:135.00000238%"
+           id="tspan5253">RandSubComponent</tspan></tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#00bac0;stroke-width:2.00998545;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4704-6"
+       width="227.99002"
+       height="139.99002"
+       x="483.14786"
+       y="509.51004" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:39.20584106px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="609.16882"
+       y="573.0094"
+       id="text5225"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98014597,1.0202562)"><tspan
+         sodipodi:role="line"
+         x="609.16882"
+         y="573.0094"
+         id="tspan5227"><tspan
+           x="609.16882"
+           y="573.0094"
+           style="font-size:19.60292053px;line-height:135.00000238%;text-align:center;text-anchor:middle"
+           id="tspan5229">ListComponent</tspan></tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#192730;stroke-width:2.00998545;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4704-9"
+       width="227.99002"
+       height="139.99002"
+       x="243.14786"
+       y="509.51004" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:39.20584106px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="263.90323"
+       y="573.0094"
+       id="text5231"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98014601,1.0202562)"><tspan
+         sodipodi:role="line"
+         x="263.90323"
+         y="573.0094"
+         id="tspan5233"><tspan
+           x="263.90323"
+           y="573.0094"
+           style="font-size:19.60292053px;line-height:135.00000238%"
+           id="tspan5235">RandSubComponent</tspan></tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#00bac0;stroke-width:2.00998545;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4704-5"
+       width="227.99002"
+       height="139.99002"
+       x="4.5764236"
+       y="509.22437" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:39.20584106px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="15.500067"
+       y="572.72937"
+       id="text5219"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98014601,1.0202562)"><tspan
+         sodipodi:role="line"
+         x="15.500067"
+         y="572.72937"
+         id="tspan5221"><tspan
+           x="15.500067"
+           y="572.72937"
+           style="font-size:19.60292053px;line-height:135.00000238%"
+           id="tspan5223">AccordionComponent</tspan></tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#00bac0;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 18.571431,179.50503 58.588847,0"
+       id="path4901"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#192730;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 18.571431,159.50503 58.588843,0"
+       id="path4901-6"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#2196f3;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 18.571431,139.50503 58.58884,0"
+       id="path4901-6-3"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="88.729149"
+       y="144.09264"
+       id="text4933"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4935"
+         x="88.729149"
+         y="144.09264"
+         style="font-size:15px">Observed</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="88.729149"
+       y="164.04871"
+       id="text4933-2"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4935-0"
+         x="88.729149"
+         y="164.04871"
+         style="font-size:15px">Ignored</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="88.729149"
+       y="184.15024"
+       id="text4933-2-6"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4935-0-1"
+         x="88.729149"
+         y="184.15024"
+         style="font-size:15px">Sub observed</tspan></text>
+  </g>
+</svg>
