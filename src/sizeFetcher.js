@@ -108,7 +108,6 @@ const sizeFetcher = (SubComponent, options = {}) => {
   SizeFetcher.displayName = `SizeFetcher(${getDisplayName(SubComponent)})`
   SizeFetcher.propTypes = {
     sizeChange: PropTypes.func.isRequired,
-    id: PropTypes.any.isRequired,
   }
 
   return SizeFetcher
