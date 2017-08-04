@@ -10,11 +10,11 @@ let enhanceReactElement
 /*
 * Apply enhanceReactElement to each child of children
 */
-const enhanceReactChildren = (children, callback, componentsToWatch) => {
+const enhanceReactChildren = (children, callback, componentsToWatch, id) => {
   if (Array.isArray(children)) {
-    return React.Children.map(children, child => enhanceReactChildren(child, callback, componentsToWatch))
+    return React.Children.map(children, child => enhanceReactChildren(child, callback, componentsToWatch, id))
   } else if (children instanceof Object) {
-    return enhanceReactElement(children, callback, componentsToWatch)
+    return enhanceReactElement(children, callback, componentsToWatch, id)
   }
   return children
 }
@@ -25,13 +25,13 @@ const enhanceReactChildren = (children, callback, componentsToWatch) => {
 *  1. function (FTRE): Components created by the user
 *  2. string (STRE): DOM nodes
 */
-enhanceReactElement = (child, callback, componentsToWatch) => {
+enhanceReactElement = (child, callback, componentsToWatch, id) => {
   // The element is in the list to observe
   const toObserve = componentsToWatch.indexOf(getDisplayName(child.type)) > -1
 
   if (child && typeof child.type === 'function') {
     // One way to identify surely, without assumption on the name, a function
-    const funcSignature = `${toObserve ? 'observed' : 'transparent'}-${child.type.toString()}`
+    const funcSignature = `${id}-${toObserve ? 'observed' : 'transparent'}-${child.type.toString()}`
 
     // We register the innerEnhancer so it won't remount sub element when update
     if (!registeredType[funcSignature]) {
@@ -53,7 +53,7 @@ enhanceReactElement = (child, callback, componentsToWatch) => {
   // Return the child with its children enhanced
   return Object.assign({}, child, {
     props: Object.assign({}, child.props, {
-      children: enhanceReactChildren(child.props ? child.props.children : null, callback, componentsToWatch),
+      children: enhanceReactChildren(child.props ? child.props.children : null, callback, componentsToWatch, id),
     }),
   })
 }

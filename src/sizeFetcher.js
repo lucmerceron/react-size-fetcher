@@ -6,6 +6,10 @@ import warning from './utils/warning'
 
 import { getDisplayName, isStateless } from './utils/utils'
 
+// A counter that we will increment at SizeFetcher contruct
+// so we can differentiate each SizeFetcher for the update's sake
+let uniqId = 0
+
 /*
 * Size Inversion Inheritence Higher Order Component
 * This component is usefull when you need a transparant way for knowing the size of a sub component
@@ -33,6 +37,12 @@ const sizeFetcher = (SubComponent, options = {}) => {
   }
 
   class SizeFetcher extends ComposedComponent {
+    constructor() {
+      super()
+
+      uniqId += 1
+      this.id = uniqId
+    }
     componentDidMount() {
       if (super.componentDidMount) super.componentDidMount()
       const { clientHeight, clientWidth, scrollHeight, scrollWidth } = this.comp
@@ -84,10 +94,11 @@ const sizeFetcher = (SubComponent, options = {}) => {
       const newChildren = newOptions.watchSubComponents.length > 0
         ? enhanceReactChildren(elementsTree.props.children,
             this.privateHandleSizeMayHaveChanged.bind(this),
-            newOptions.watchSubComponents)
+            newOptions.watchSubComponents,
+            this.id)
         : elementsTree.props.children
       // Here thanks to II, we can add a ref without the subComponent noticing
-      const newProps = Object.assign({}, elementsTree.props, { ref: comp => (this.comp = comp) })
+      const newProps = Object.assign({}, elementsTree.props, { ref: comp => { this.comp = comp } })
       // Create a new component from SubComponent render with new props
       const newElementsTree = React.cloneElement(elementsTree, newProps, newChildren)
 
@@ -97,6 +108,7 @@ const sizeFetcher = (SubComponent, options = {}) => {
   SizeFetcher.displayName = `SizeFetcher(${getDisplayName(SubComponent)})`
   SizeFetcher.propTypes = {
     sizeChange: PropTypes.func.isRequired,
+    id: PropTypes.any.isRequired,
   }
 
   return SizeFetcher
